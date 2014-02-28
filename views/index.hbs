@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+	<head>
+        <meta charset="utf-8">
+        <title>LeanKit TicketForm</title>
+        <meta name="viewport" content="width=device-width">
+
+        <style>
+			body { width: 600px;margin: 0 auto;font-family: Helvetica, arial, freesans, clean, sans-serif; }
+
+			.bau-request-form ul { margin: 0;padding: 0;list-style: none }
+
+			.bau-request-form li { margin: 0;padding: 0; }
+
+			.bau-request-form label {font-weight: bold;}
+
+			.bau-request-form .request-basic-details label { font-weight: bold;display: inline-block;width: 130px; }
+
+			.bau-request-form .request-basic-details input { width: 200px; }
+
+			.request-details { width: 100%;height: 200px; }
+
+			.request-details-small { width: 100%;height: 100px; }
+
+			.request-section { margin-top: 10px; }
+
+			.right { text-align: right; }
+        </style>
+	</head>
+	<body>
+
+		<div class="bau-request-form">
+		    <h1>LateRooms BAU Ticket Requests</h1>
+
+		    <p>In order for the business to effectively prioritise the IT backlog all requests must be made through the completion of this form. The more detail you are able to provide (particularly in terms of defining the business benefit) the greater opportunity that your ticket will be prioritised and worked upon.</p>
+		    
+		    <ul class="request-basic-details">
+		        <li>
+		            <label for="your-name">Your Name</label>
+		            <input type="text" id="your-name" name="requestedBy" data-field-type="tag" />
+		        </li>
+		        <li>
+		            <label for="department">Department</label>
+		            <input type="text" id="department" name="department" data-field-type="tag" />
+		        </li>
+		        <li>
+		            <label for="title">Name of Ticket</label>
+		            <input type="text" id="title" name="title" data-field-type="title" />
+		        </li>
+		    </ul>
+		    
+		    <div class="request-section">
+		        <label>Details of Ticket / Summary of Issue</label>
+		        <textarea class="request-details"></textarea>
+		    
+		        <label>Requirements</label>
+		        <textarea class="request-details"></textarea>
+		    </div>
+		    
+		    <div class="request-section">
+		        <ul>
+		            <li>
+		                <label>Which site / sites will the change be made to?</label>
+		            </li>
+		            <li>
+		                <label>Identify if the change will affect more than one page</label>
+		            </li>
+		            <li>
+		                <label>Identify the specific expected behaviour</label>
+		            </li>
+		            <li>
+		                <label>Identify the specific constraints</label>
+		            </li>
+		            <li>
+		                <label>Identify if a new text will be introduced</label>
+		            </li>
+		            <li>
+		                <label>Translation of new text </label>
+		            </li>
+		            <li>
+		                <label>Identify if the artwork is needed and provided</label>
+		            </li>
+		        </ul>
+		    </div>
+
+		    
+		    <div class="request-section">
+		        <label>Background / Reason for change</label>
+		        <textarea class="request-details-small"></textarea>
+		    
+		        <label>Business Rationale / Impact</label>
+		        <textarea class="request-details"></textarea>
+		        
+		        <label>How will success be measured?</label>
+		        <textarea class="request-details-small"></textarea>
+		    </div>    
+		    
+		    <div class="request-section right">
+		        <button id="create-ticket" class="form-button">Submit Request</button>
+		    </div>
+		</div>
+
+		<script src="/static/jquery.min.js"></script>
+		<script type="text/javascript">
+			$('#create-ticket').on('click', function(){
+				var formFields = $('.request-item');
+
+				var ticket = {
+					title: '',
+					description: [],
+					tags: []
+				};
+
+				formFields.each(function(field) {
+					var formFieldType = field.data('fieldType');
+
+					if(fieldType === 'title') {
+						ticket.title += field.value();
+					}
+					else if (fieldType === 'description') {
+
+					}
+					else if (fieldType === 'tag') {
+						ticket.tags.push(field.value());
+					}
+				});
+
+				$.ajax({
+					url: '/create'
+				});
+			});
+		</script>
+	</body>
+</html>
