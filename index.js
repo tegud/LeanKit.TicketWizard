@@ -58,7 +58,24 @@ var server = function() {
         function createViewModel(formInfo) {
             _.each(formInfo.sections, function(section) {
                 _.each(section.fields, function(field) {
-                    field.name = field.label.replace(/ /g, '-').toLowerCase();
+                    field.fieldCssClass = 'request-item';
+                    field.name = field.name || field.fillpoint || field.label.replace(/ /g, '-').toLowerCase();
+
+                    if(field.options) {
+                        field.isMultiChoice = true;
+                    }
+                    else if(field.type === 'description') {
+                        field.isTextArea = true;
+                        field.fieldCssClass += ' request-details';
+                    }
+                    else {
+                        field.isTextField = true;
+                        field.fieldCssClass += ' single-line';
+                    }
+
+                    if(field.size === 'small') {
+                        field.fieldCssClass += ' small';   
+                    }
                 });
             });
 
@@ -82,6 +99,81 @@ var server = function() {
                         {
                             label: 'Name of Ticket',
                             type: 'title'
+                        }
+                    ]
+                },
+                {
+                    fields: [
+                        {
+                            label: 'Details of Ticket / Summary of Issue',
+                            type: 'description',
+                            fillpoint: 'summary'
+                        },
+                        {
+                            label: 'Requirements',
+                            type: 'description',
+                            fillpoint: 'requirements'
+                        }
+                    ]
+                },
+                {
+                    /*
+                    <li>
+                        <label>Identify if the change will affect more than one page</label>
+                        <div class="request-item" data-field-type="multi-choice">
+                            <label><input type="radio" name="MoreThanOnePage" value="Affects more than one page" /> Yes</label>
+                            <label><input type="radio" name="MoreThanOnePage" value="" checked /> No</label>
+                        </div>
+                    </li>
+                    <li>
+                        <label>Identify the specific expected behaviour</label>
+                    </li>
+                    <li>
+                        <label>Identify the specific constraints</label>
+                    </li>
+                    <li>
+                        <label>Identify if a new text will be introduced</label>
+                    </li>
+                    <li>
+                        <label>Translation of new text </label>
+                    </li>
+                    <li>
+                        <label>Identify if the artwork is needed and provided</label>
+                    </li>
+                    */
+                    fields: [
+                        {
+                            label: 'Which site / sites will the change be made to?',
+                            name: 'Sites',
+                            type: 'tag',
+                            options: [
+                                { value: 'LR.com' },
+                                { value: 'LR.com Mobile' },
+                                { value: 'AR.com' },
+                                { value: 'AR.com Mobile' },
+                            ]
+                        },
+                        { label: '',  }
+                    ]
+                }, 
+                {
+                    fields: [
+                        {
+                            label: 'Background / Reason for change',
+                            type: 'description',
+                            fillpoint: 'background',
+                            size: 'small'
+                        },
+                        {
+                            label: 'Business Rationale / Impact',
+                            type: 'description',
+                            fillpoint: 'businessRationale'
+                        },
+                        {
+                            label: 'How will success be measured?',
+                            type: 'description',
+                            fillpoint: 'successMeasurement',
+                            size: 'small'
                         }
                     ]
                 }

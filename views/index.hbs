@@ -20,7 +20,7 @@
 
 			.request-details { width: 100%;height: 200px; }
 
-			.request-details-small { width: 100%;height: 100px; }
+			.request-details.small { height: 100px; }
 
 			.request-section { margin-top: 10px; }
 
@@ -37,70 +37,32 @@
 		    {{#sections}}
 		    	<div class="request-section">
 		    	{{#fields}}
+		    		{{#if isTextField}}
 			        <div>
 			            <label for="{{name}}" class="single-line">{{label}}</label>
-			            <input type="text" class="single-line" id="{{name}}" data-field-type="{{type}}" class="request-item" />
+			            <input type="text" class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" />
 			        </div>
+			        {{/if}}
+		    		{{#if isTextArea}}
+			        <div>
+				        <label for="{{name}}">{{label}}</label>
+				        <textarea class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" data-field-name="{{fillpoint}}"></textarea>
+			        </div>
+			        {{/if}}
+			        {{#if isMultiChoice}}
+			        	<div>
+			                <label>{{label}}</label>
+			                <div class="request-item multiple-choice" data-field-type="{{type}}">
+			                	{{#options}}
+			                		<label><input type="checkbox" name="{{../name}}" value="{{value}}" /> {{value}}</label>
+			                	{{/options}}
+			            	</div>
+			        	</div>
+			        {{/if}}
 		    	{{/fields}}
 		    	</div>
 	    	{{/sections}}
-		    
-		    <div class="request-section">
-		        <label>Details of Ticket / Summary of Issue</label>
-		        <textarea class="request-details request-item" data-field-type="description" data-field-name="summary"></textarea>
-		    
-		        <label>Requirements</label>
-		        <textarea class="request-details request-item" data-field-type="description" data-field-name="requirements"></textarea>
-		    </div>
-		    
-		    <div class="request-section">
-		        <ul>
-		            <li>
-		                <label>Which site / sites will the change be made to?</label>
-		                <div class="request-item" data-field-type="multi-choice">
-			                <label><input type="checkbox" name="Sites" value="LR.com" /> LR.com</label>
-			                <label><input type="checkbox" name="Sites" value="LR.com Mobile" /> LR.com Mobile</label>
-			                <label><input type="checkbox" name="Sites" value="AR.com" />AR.com</label>
-			                <label><input type="checkbox" name="Sites" value="AR.com Mobile" />AR.com Mobile</label>
-		            	</div>
-		            </li>
-		            <li>
-		                <label>Identify if the change will affect more than one page</label>
-		                <div class="request-item" data-field-type="multi-choice">
-			                <label><input type="radio" name="MoreThanOnePage" value="Affects more than one page" /> Yes</label>
-			                <label><input type="radio" name="MoreThanOnePage" value="" checked /> No</label>
-		                </div>
-		            </li>
-		            <li>
-		                <label>Identify the specific expected behaviour</label>
-		            </li>
-		            <li>
-		                <label>Identify the specific constraints</label>
-		            </li>
-		            <li>
-		                <label>Identify if a new text will be introduced</label>
-		            </li>
-		            <li>
-		                <label>Translation of new text </label>
-		            </li>
-		            <li>
-		                <label>Identify if the artwork is needed and provided</label>
-		            </li>
-		        </ul>
-		    </div>
 
-		    
-		    <div class="request-section">
-		        <label>Background / Reason for change</label>
-		        <textarea class="request-details-small request-item" data-field-type="description" data-field-name="background"></textarea>
-		    
-		        <label>Business Rationale / Impact</label>
-		        <textarea class="request-details request-item" data-field-type="description" data-field-name="businessRationale"></textarea>
-		        
-		        <label>How will success be measured?</label>
-		        <textarea class="request-details-small request-item" data-field-type="description" data-field-name="successMeasurement"></textarea>
-		    </div>    
-		    
 		    <div class="request-section right">
 		        <button id="create-ticket" class="form-button">Submit Request</button>
 		    </div>
@@ -120,28 +82,41 @@
 				formFields.each(function() {
 					var field = $(this);
 					var fieldType = field.data('fieldType');
+					var value = this.value;
+					var valueIsArray;
 
-					if(fieldType === 'title') {
-						ticket.title += this.value;
-					}
-					else if (fieldType === 'description') {
-						ticket.description[field.data('fieldName')] = this.value;
-					}
-					else if (fieldType === 'tag') {
-						ticket.tags.push(this.value);
-					}
-					else if (fieldType === 'multi-choice') {
+					if(field.hasClass('multiple-choice')) {
 						var items = $('input:checked', field);
+						value = [];
+						valueIsArray = true;
 
 						items.each(function() {
 							if(!this.value) {
 								return true;
 							}
-							ticket.tags.push(this.value);
+							value.push(this.value);
 						});
+					}
+
+					if(fieldType === 'title') {
+						ticket.title += value;
+					}
+					else if (fieldType === 'description') {
+						ticket.description[field.data('fieldName')] = value;
+					}
+					else if (fieldType === 'tag') {
+						if (valueIsArray) {
+							ticket.tags.push.apply(ticket.tags, value);
+						}
+						else { 
+							ticket.tags.push(value);
+						}
 					}
 				});
 
+				console.log(ticket);
+
+				return;
 				$.ajax({
 					url: '/create',
 					type: 'POST',
