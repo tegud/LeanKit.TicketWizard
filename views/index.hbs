@@ -54,7 +54,7 @@
 			                <label>{{label}}</label>
 			                <div class="request-item multiple-choice" data-field-type="{{type}}">
 			                	{{#options}}
-			                		<label><input type="checkbox" name="{{../name}}" value="{{value}}" /> {{value}}</label>
+			                		<label><input type="{{../inputType}}" name="{{../name}}" value="{{value}}"{{#if selected}}checked{{/if}} /> {{value}}</label>
 			                	{{/options}}
 			            	</div>
 			        	</div>
@@ -114,9 +114,6 @@
 					}
 				});
 
-				console.log(ticket);
-
-				return;
 				$.ajax({
 					url: '/create',
 					type: 'POST',

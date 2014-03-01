@@ -1,0 +1,140 @@
+{
+   "title":"LateRooms BAU Ticket Requests",
+   "summary":"In order for the business to effectively prioritise the IT backlog all requests must be made through the completion of this form. The more detail you are able to provide (particularly in terms of defining the business benefit) the greater opportunity that your ticket will be prioritised and worked upon.",
+   "sections":[
+      {
+         "fields":[
+            {
+               "label":"Your Name",
+               "type":"tag"
+            },
+            {
+               "label":"Department",
+               "type":"tag"
+            },
+            {
+               "label":"Name of Ticket",
+               "type":"title"
+            }
+         ]
+      },
+      {
+         "fields":[
+            {
+               "label":"Details of Ticket / Summary of Issue",
+               "type":"description",
+               "fillpoint":"summary"
+            },
+            {
+               "label":"Requirements",
+               "type":"description",
+               "fillpoint":"requirements"
+            }
+         ]
+      },
+      {
+         "fields":[
+            {
+               "label":"Which site / sites will the change be made to?",
+               "name":"Sites",
+               "type":"tag",
+               "allowMultiple":true,
+               "options":[
+                  {
+                     "value":"LR.com"
+                  },
+                  {
+                     "value":"LR.com Mobile"
+                  },
+                  {
+                     "value":"AR.com"
+                  },
+                  {
+                     "value":"AR.com Mobile"
+                  }
+               ]
+            },
+            {
+               "label":"Identify if the change will affect more than one page",
+               "options":[
+                  {
+                     "value":"Affects more than one page",
+                     "label":"Yes"
+                  },
+                  {
+                     "value":"",
+                     "label":"No",
+                     "selected":true
+                  }
+               ]
+            },
+            {
+               "label":"Identify the specific expected behaviour",
+               "options":[
+                  {
+                     "value":"N/A",
+                     "selected":true
+                  }
+               ]
+            },
+            {
+               "label":"Identify the specific constraints",
+               "options":[
+                  {
+                     "value":"N/A",
+                     "selected":true
+                  }
+               ]
+            },
+            {
+               "label":"Identify if a new text will be introduced",
+               "options":[
+                  {
+                     "value":"N/A",
+                     "selected":true
+                  }
+               ]
+            },
+            {
+               "label":"Translation of new text",
+               "options":[
+                  {
+                     "value":"N/A",
+                     "selected":true
+                  }
+               ]
+            },
+            {
+               "label":"Identify if the artwork is needed and provided",
+               "options":[
+                  {
+                     "value":"N/A",
+                     "selected":true
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "fields":[
+            {
+               "label":"Background / Reason for change",
+               "type":"description",
+               "fillpoint":"background",
+               "size":"small"
+            },
+            {
+               "label":"Business Rationale / Impact",
+               "type":"description",
+               "fillpoint":"businessRationale"
+            },
+            {
+               "label":"How will success be measured?",
+               "type":"description",
+               "fillpoint":"successMeasurement",
+               "size":"small"
+            }
+         ]
+      }
+   ]
+}
