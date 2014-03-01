@@ -3,40 +3,24 @@
 	<head>
         <meta charset="utf-8">
         <title>LeanKit TicketForm</title>
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
 
         <link href="/static/css/bootstrap.min.css" rel="stylesheet">
         <link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
-
-        <style>
-			body { width: 600px;margin: 0 auto 10px auto;font-family: Helvetica, arial, freesans, clean, sans-serif; }
-
-			.bau-request-form ul { margin: 0;padding: 0;list-style: none }
-
-			.bau-request-form li { margin: 0;padding: 0; }
-
-			.request-section label {font-weight: bold;}
-
-			.request-section label.single-line { font-weight: bold;display: inline-block;width: 130px; }
-
-			.request-section input.single-line { width: 200px; }
-
-			.request-details { width: 100%;height: 200px; }
-
-			.request-details.small { height: 100px; }
-
-			.request-section { margin-top: 10px; }
-
-			.bau-request-item { margin: 10px 0; }
-
-			.multiple-choice-item { padding: 5px 5px 5px 5px; margin-right: 5px; border: solid 1px #ddd; -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;background-color: #eee; cursor: pointer; }
-
-			.right { text-align: right; }
-        </style>
+        <link href="/static/css/site.css" rel="stylesheet">
 	</head>
 	<body>
+		<header id="top-bar">
+            <a id="top-bar-logo" href="http://lr-brand-releases.laterooms.com"></a>
+            <div class="top-bar-section">
+                <ul>
+                    <li>Ticket Wizard</li>
+                </ul>
+            </div>
+        </header>
 
-		<div class="bau-request-form">
+		<div class="request-form">
 		    <h1>{{title}}</h1>
 
 		    <p>{{summary}}</p>
