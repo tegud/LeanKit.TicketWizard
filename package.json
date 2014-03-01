@@ -4,7 +4,8 @@
   "dependencies": {
     "hbs": "~2.5.0",
     "leankit-client": "~0.1.0",
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "lodash": "~2.4.1"
   },
   "engines": {
     "node": ">=0.8.0"

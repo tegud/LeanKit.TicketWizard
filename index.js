@@ -6,6 +6,7 @@ var hbs = require('hbs');
 var handlebars = hbs.handlebars;
 var LeanKitClient = require('leankit-client');
 var fs = require('fs');
+var _ = require('lodash');
 
 var server = function() {
     var httpServer;
@@ -54,13 +55,40 @@ var server = function() {
     });
 
     app.use('/', function(req, res) {
-        res.render('index.hbs', {
+        function createViewModel(formInfo) {
+            _.each(formInfo.sections, function(section) {
+                _.each(section.fields, function(field) {
+                    field.name = field.label.replace(/ /g, '-').toLowerCase();
+                });
+            });
+
+            return formInfo;
+        }
+
+        var data  = {
             title: 'LateRooms BAU Ticket Requests',
             summary: 'In order for the business to effectively prioritise the IT backlog all requests must be made through the completion of this form. The more detail you are able to provide (particularly in terms of defining the business benefit) the greater opportunity that your ticket will be prioritised and worked upon.',
             sections: [
-                
+                {
+                    fields: [
+                        {
+                            label: 'Your Name',
+                            type: 'tag'
+                        },
+                        {
+                            label: 'Department',
+                            type: 'tag'
+                        },
+                        {
+                            label: 'Name of Ticket',
+                            type: 'title'
+                        }
+                    ]
+                }
             ]
-        });
+        };
+
+        res.render('index.hbs', createViewModel(data));
     });
 
     return {

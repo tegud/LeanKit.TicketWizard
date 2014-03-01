@@ -34,20 +34,16 @@
 
 		    <p>{{summary}}</p>
 		    
-		    <div class="request-section">
-		        <div>
-		            <label for="requestedBy" class="single-line">Your Name</label>
-		            <input type="text" class="single-line" id="requestedBy" data-field-type="tag" class="request-item" />
-		        </div>
-		        <div>
-		            <label for="department" class="single-line">Department</label>
-		            <input type="text" class="single-line" id="department" data-field-type="tag" class="request-item" />
-		        </div>
-		        <div>
-		            <label for="title" class="single-line">Name of Ticket</label>
-		            <input type="text" class="single-line" id="title" data-field-type="title" class="request-item" />
-		        </div>
-			</div>
+		    {{#sections}}
+		    	<div class="request-section">
+		    	{{#fields}}
+			        <div>
+			            <label for="{{name}}" class="single-line">{{label}}</label>
+			            <input type="text" class="single-line" id="{{name}}" data-field-type="{{type}}" class="request-item" />
+			        </div>
+		    	{{/fields}}
+		    	</div>
+	    	{{/sections}}
 		    
 		    <div class="request-section">
 		        <label>Details of Ticket / Summary of Issue</label>
