@@ -12,11 +12,11 @@
 
 			.bau-request-form li { margin: 0;padding: 0; }
 
-			.bau-request-form label {font-weight: bold;}
+			.request-section label {font-weight: bold;}
 
-			.bau-request-form .request-basic-details label { font-weight: bold;display: inline-block;width: 130px; }
+			.request-section label.single-line { font-weight: bold;display: inline-block;width: 130px; }
 
-			.bau-request-form .request-basic-details input { width: 200px; }
+			.request-section input.single-line { width: 200px; }
 
 			.request-details { width: 100%;height: 200px; }
 
@@ -30,40 +30,50 @@
 	<body>
 
 		<div class="bau-request-form">
-		    <h1>LateRooms BAU Ticket Requests</h1>
+		    <h1>{{title}}</h1>
 
-		    <p>In order for the business to effectively prioritise the IT backlog all requests must be made through the completion of this form. The more detail you are able to provide (particularly in terms of defining the business benefit) the greater opportunity that your ticket will be prioritised and worked upon.</p>
+		    <p>{{summary}}</p>
 		    
-		    <ul class="request-basic-details">
-		        <li>
-		            <label for="your-name">Your Name</label>
-		            <input type="text" id="your-name" name="requestedBy" data-field-type="tag" />
-		        </li>
-		        <li>
-		            <label for="department">Department</label>
-		            <input type="text" id="department" name="department" data-field-type="tag" />
-		        </li>
-		        <li>
-		            <label for="title">Name of Ticket</label>
-		            <input type="text" id="title" name="title" data-field-type="title" />
-		        </li>
-		    </ul>
+		    <div class="request-section">
+		        <div>
+		            <label for="requestedBy" class="single-line">Your Name</label>
+		            <input type="text" class="single-line" id="requestedBy" data-field-type="tag" class="request-item" />
+		        </div>
+		        <div>
+		            <label for="department" class="single-line">Department</label>
+		            <input type="text" class="single-line" id="department" data-field-type="tag" class="request-item" />
+		        </div>
+		        <div>
+		            <label for="title" class="single-line">Name of Ticket</label>
+		            <input type="text" class="single-line" id="title" data-field-type="title" class="request-item" />
+		        </div>
+			</div>
 		    
 		    <div class="request-section">
 		        <label>Details of Ticket / Summary of Issue</label>
-		        <textarea class="request-details"></textarea>
+		        <textarea class="request-details request-item" data-field-type="description" data-field-name="summary"></textarea>
 		    
 		        <label>Requirements</label>
-		        <textarea class="request-details"></textarea>
+		        <textarea class="request-details request-item" data-field-type="description" data-field-name="requirements"></textarea>
 		    </div>
 		    
 		    <div class="request-section">
 		        <ul>
 		            <li>
 		                <label>Which site / sites will the change be made to?</label>
+		                <div class="request-item" data-field-type="multi-choice">
+			                <label><input type="checkbox" name="Sites" value="LR.com" /> LR.com</label>
+			                <label><input type="checkbox" name="Sites" value="LR.com Mobile" /> LR.com Mobile</label>
+			                <label><input type="checkbox" name="Sites" value="AR.com" />AR.com</label>
+			                <label><input type="checkbox" name="Sites" value="AR.com Mobile" />AR.com Mobile</label>
+		            	</div>
 		            </li>
 		            <li>
 		                <label>Identify if the change will affect more than one page</label>
+		                <div class="request-item" data-field-type="multi-choice">
+			                <label><input type="radio" name="MoreThanOnePage" value="Affects more than one page" /> Yes</label>
+			                <label><input type="radio" name="MoreThanOnePage" value="" checked /> No</label>
+		                </div>
 		            </li>
 		            <li>
 		                <label>Identify the specific expected behaviour</label>
@@ -86,13 +96,13 @@
 		    
 		    <div class="request-section">
 		        <label>Background / Reason for change</label>
-		        <textarea class="request-details-small"></textarea>
+		        <textarea class="request-details-small request-item" data-field-type="description" data-field-name="background"></textarea>
 		    
 		        <label>Business Rationale / Impact</label>
-		        <textarea class="request-details"></textarea>
+		        <textarea class="request-details request-item" data-field-type="description" data-field-name="businessRationale"></textarea>
 		        
 		        <label>How will success be measured?</label>
-		        <textarea class="request-details-small"></textarea>
+		        <textarea class="request-details-small request-item" data-field-type="description" data-field-name="successMeasurement"></textarea>
 		    </div>    
 		    
 		    <div class="request-section right">
@@ -107,26 +117,41 @@
 
 				var ticket = {
 					title: '',
-					description: [],
+					description: {},
 					tags: []
 				};
 
-				formFields.each(function(field) {
-					var formFieldType = field.data('fieldType');
+				formFields.each(function() {
+					var field = $(this);
+					var fieldType = field.data('fieldType');
 
 					if(fieldType === 'title') {
-						ticket.title += field.value();
+						ticket.title += this.value;
 					}
 					else if (fieldType === 'description') {
-
+						ticket.description[field.data('fieldName')] = this.value;
 					}
 					else if (fieldType === 'tag') {
-						ticket.tags.push(field.value());
+						ticket.tags.push(this.value);
+					}
+					else if (fieldType === 'multi-choice') {
+						var items = $('input:checked', field);
+
+						items.each(function() {
+							if(!this.value) {
+								return true;
+							}
+							ticket.tags.push(this.value);
+						});
 					}
 				});
 
 				$.ajax({
-					url: '/create'
+					url: '/create',
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify(ticket),
+					cache: false
 				});
 			});
 		</script>

@@ -3,7 +3,9 @@
 var express = require('express');
 var http = require('http');
 var hbs = require('hbs');
+var handlebars = hbs.handlebars;
 var LeanKitClient = require('leankit-client');
+var fs = require('fs');
 
 var server = function() {
     var httpServer;
@@ -13,6 +15,8 @@ var server = function() {
     app.set('view engine', 'html');
     app.engine('html', hbs.__express);
 
+    app.use(express.json());
+
     app.use("/static", express.static(__dirname + '/static'));
 
     app.use('/create', function(req, res) {
@@ -21,37 +25,42 @@ var server = function() {
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
         var boardIdentifiers;
-        
-        var testCard = {
-            Title: 'Test Request',
-            Description: '',
-            TypeId: cardTypeId,
-            Priority: 1,
-            Size: 0,
-            IsBlocked: false,
-            BlockReason: '',
-            DueDate: '',
-            ExternalSystemName: '',
-            ExternalSystemUrl: '',
-            Tags: '',
-            ClassOfServiceId: null,
-            ExternalCardId: '',
-            AssignedUserIds: []
-        };
 
-        client.getBoardIdentifiers(boardId, function(err, boardRes) {
-            console.log(boardRes);
-        });
+        fs.readFile(__dirname + '/ticketTemplates/bauRequest.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
+            var template = handlebars.compile(fileContents);
+            var description = template(req.body.description);
 
-        client.addCard(boardId, insertIntoLaneId, 0, testCard, function(err, newCard) { 
-            console.log(err);
-            console.log(newCard);
-            res.end(err);
+            var testCard = {
+                Title: req.body.title,
+                Description: description,
+                TypeId: cardTypeId,
+                Priority: 1,
+                Size: 0,
+                IsBlocked: false,
+                BlockReason: '',
+                DueDate: '',
+                ExternalSystemName: '',
+                ExternalSystemUrl: '',
+                Tags: req.body.tags.join(','),
+                ClassOfServiceId: null,
+                ExternalCardId: '',
+                AssignedUserIds: []
+            };
+
+            client.addCard(boardId, insertIntoLaneId, 0, testCard, function(err, newCard) { 
+                res.end(err);
+            });
         });
     });
 
     app.use('/', function(req, res) {
-        res.render('index.hbs');
+        res.render('index.hbs', {
+            title: 'LateRooms BAU Ticket Requests',
+            summary: 'In order for the business to effectively prioritise the IT backlog all requests must be made through the completion of this form. The more detail you are able to provide (particularly in terms of defining the business benefit) the greater opportunity that your ticket will be prioritised and worked upon.',
+            sections: [
+                
+            ]
+        });
     });
 
     return {
@@ -71,7 +80,7 @@ var server = function() {
 
 if(require.main === module) {
     new server().start({
-        port: 3000
+        port: 3001
     });
 }
 
