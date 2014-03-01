@@ -21,14 +21,14 @@ var server = function() {
 
     app.use("/static", express.static(__dirname + '/static'));
 
-    app.use('/create', function(req, res) {
+    app.post('/:team/:form/create', function(req, res) {
         var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
         var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
         var boardIdentifiers;
 
-        fs.readFile(__dirname + '/ticketTemplates/bauRequest.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
+        fs.readFile(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
             var template = handlebars.compile(fileContents);
             var description = template(req.body.description);
 
@@ -56,19 +56,19 @@ var server = function() {
     });
 
     app.get('/:team/:form', function(req, res) {
-        fs.readFile(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.json', { encoding: 'utf-8' }, function(err, fileContents) {
+        var team = req.params.team;
+        var form = req.params.form;
+
+        fs.readFile(__dirname + '/teams/' + team + '/' + form + '.json', { encoding: 'utf-8' }, function(err, fileContents) {
             if(err) {
                 res.end('Form or Team not found');
                 return;
             }
 
             var data = JSON.parse(fileContents);
-            res.render('index.hbs', BuildFormViewModel(data));
+            var viewModel = BuildFormViewModel(team, form, data);
+            res.render('index.hbs', viewModel);
         });
-    });
-
-    app.use('/', function(req, res) {
-        res.end('Welcome to ticket wizard');
     });
 
     return {
