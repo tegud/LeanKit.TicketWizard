@@ -1,6 +1,7 @@
 {
    "title":"LateRooms BAU Ticket Requests",
    "summary":"In order for the business to effectively prioritise the IT backlog all requests must be made through the completion of this form. The more detail you are able to provide (particularly in terms of defining the business benefit) the greater opportunity that your ticket will be prioritised and worked upon.",
+   "allowAttachments": false,
    "sections":[
       {
          "fields":[
@@ -69,47 +70,32 @@
                ]
             },
             {
-               "label":"Identify the specific expected behaviour",
+               "label":"Is new text or translations provided",
                "options":[
                   {
-                     "value":"N/A",
-                     "selected":true
+                     "value":"Not Needed",
+                     "selected": true
+                  },
+                  {
+                     "value":"Provided"
+                  },
+                  {
+                     "value":"Not Provided"
                   }
                ]
             },
             {
-               "label":"Identify the specific constraints",
+               "label":"Is new artwork is needed and provided",
                "options":[
                   {
-                     "value":"N/A",
-                     "selected":true
-                  }
-               ]
-            },
-            {
-               "label":"Identify if a new text will be introduced",
-               "options":[
+                     "value":"Not Needed",
+                     "selected": true
+                  },
                   {
-                     "value":"N/A",
-                     "selected":true
-                  }
-               ]
-            },
-            {
-               "label":"Translation of new text",
-               "options":[
+                     "value":"Provided"
+                  },
                   {
-                     "value":"N/A",
-                     "selected":true
-                  }
-               ]
-            },
-            {
-               "label":"Identify if the artwork is needed and provided",
-               "options":[
-                  {
-                     "value":"N/A",
-                     "selected":true
+                     "value":"Not Provided"
                   }
                ]
             }

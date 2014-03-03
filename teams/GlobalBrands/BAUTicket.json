@@ -1,0 +1,57 @@
+{
+   "title":"LateRooms BAU Ticket",
+   "allowAttachments": false,
+   "sections":[
+      {
+         "fields":[
+            {
+               "label":"Name of Ticket",
+               "type":"title"
+            }
+         ]
+      },
+      {
+         "title": "A - Statement of Requirement - (Value – how can we measure?)",
+         "fields": [
+            {
+               "name": "Requiremet",
+               "label": "Requirement",
+               "type": "table",
+               "rows": [
+                  { "label": "As a", "type": "text", "placeholder": "LateRooms site user" },
+                  { "label": "Would like", "type": "text" },
+                  { "label": "So that", "type": "text", "isLastRow": "true" }
+               ]
+            }
+         ]
+      },
+      {
+         "title": "(Optional)",
+         "fields":[
+            {
+               "label":"As is",
+               "type":"title"
+            },
+            {
+               "label":"To be",
+               "type":"title"
+            }
+         ]
+      },
+      {
+         "title": "B - Functional Acceptance Criteria - (QA - Include other regression tests where applicable)",
+         "fields": [
+            {
+               "name": "acceptance-criteria",
+               "label": "Acceptance Criteria",
+               "type": "table",
+               "rows": [
+                  { "label": "Given", "type": "text" },
+                  { "label": "When", "type": "text" },
+                  { "label": "Then", "type": "text", "isLastRow": "true" }
+               ]
+            }
+         ]
+      }
+   ]
+}

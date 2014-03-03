@@ -1,46 +1,66 @@
 
-      body { margin-bottom: 10px;font-family: Helvetica, arial, freesans, clean, sans-serif; }
+body { margin-bottom: 10px;font-family: Helvetica, arial, freesans, clean, sans-serif; }
 
-      .request-form {width: 600px;margin: 0 auto;}
+.request-form {width: 600px;margin: 0 auto;}
 
-      @media (max-width: 610px) {
-        .request-form {width: auto;margin: 0 5px;}
-      }
+@media (max-width: 610px) {
+.request-form {width: auto;margin: 0 5px;}
+}
 
-      .request-form ul { margin: 0;padding: 0;list-style: none }
+.request-form ul { margin: 0;padding: 0;list-style: none }
 
-      .request-form li { margin: 0;padding: 0; }
+.request-form li { margin: 0;padding: 0; }
 
-      .request-section label {font-weight: bold;}
+.request-section label {font-weight: bold;}
 
-      .request-section label.single-line { font-weight: bold;display: inline-block;width: 130px; }
+.request-section label.single-line { font-weight: bold;display: inline-block;width: 130px; }
 
-      .request-section input.single-line { width: 200px; }
+.request-section input.single-line { width: 200px; }
 
-      .request-details { width: 100%;height: 200px; }
+.request-details { width: 100%;height: 200px; }
 
-      .request-details.small { height: 100px; }
+.request-details.small { height: 100px; }
 
-      .request-section { margin-top: 10px; }
+.request-section { margin-top: 10px; }
 
-      .bau-request-item { margin: 10px 0; }
+.bau-request-item { margin: 10px 0; }
 
-      .multiple-choice-item { padding: 5px 5px 5px 5px; margin-right: 5px; border: solid 1px #ddd; -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;background-color: #eee; cursor: pointer; }
+.multiple-choice-item { padding: 5px 5px 5px 5px; margin-right: 5px; border: solid 1px #ddd; -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;background-color: #eee; cursor: pointer; }
 
-      .right { text-align: right; }
+.right { text-align: right; }
 
-      #top-bar { background-color: #eee; background-image: linear-gradient(#e6e6e6, #eee); border-bottom: solid 1px #ddd; overflow: hidden; }
+#top-bar { background-color: #eee; background-image: linear-gradient(#e6e6e6, #eee); border-bottom: solid 1px #ddd; overflow: hidden; }
 
-      #top-bar-logo { background-image: url('../images/ticket-wizard.png');width: 24px;height: 24px;display: inline-block; margin: 10px 8px 5px 10px; }
+#top-bar-logo { background-image: url('../images/ticket-wizard.png');width: 24px;height: 24px;display: inline-block; margin: 10px 8px 5px 10px; }
 
-      #top-bar .top-bar-section { display: inline-block; vertical-align: top;border-left: solid 1px #fff;height: 42px;}
+#top-bar .top-bar-section { display: inline-block; vertical-align: top;border-left: solid 1px #fff;height: 42px;}
 
-      #top-bar ul { padding: 0 4px;margin: 0;list-style: none;border-left: solid 1px #ddd;height: 100%; }
+#top-bar ul { padding: 0 4px;margin: 0;list-style: none;border-left: solid 1px #ddd;height: 100%; }
 
-      #top-bar li { display: inline-block;padding: 15px 5px 5px 5px;font-size: 0.9em;font-weight: bold; }
+#top-bar li { display: inline-block;padding: 15px 5px 5px 5px;font-size: 0.9em;font-weight: bold; }
 
-      #top-bar li a { text-decoration: none;color: #444;transition-property: color; transition-duration: 300ms }
+#top-bar li a { text-decoration: none;color: #444;transition-property: color; transition-duration: 300ms }
 
-      #top-bar li a:hover { color: #75A4FF }
+#top-bar li a:hover { color: #75A4FF }
 
-      #top-bar.collapsed { height: 0; }
+#top-bar.collapsed { height: 0; }
+
+.entry-table { border-collapse: collapse; width: 100%; }
+
+.entry-table th { background-color: #ddd; width: 90px; text-align: right; }
+
+.entry-table th, .entry-table td { padding: 4px;border: solid 1px #000 }
+
+.entry-table td input { width: 100%; }
+
+.entry-table tr.last-row { border-bottom: solid 4px #000 }
+
+.entry-table th.table-header { font-size: 1.2em; }
+
+.table-header-text { float: left; padding-top: 4px; }
+
+.requirement-delete { font-size: 0.8em; }
+
+.new-row { text-align: right; }
+
+.template-row { display: none }

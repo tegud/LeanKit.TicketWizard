@@ -23,15 +23,20 @@
 		<div class="request-form">
 		    <h1>{{title}}</h1>
 
-		    <p>{{summary}}</p>
-		    
+		    {{#if summary}}
+		    	<p>{{summary}}</p>
+		    {{/if}}
+
 		    {{#sections}}
+		    	{{#if title}}
+		    		<h2>{{title}}</h2>
+		    	{{/if}}
 		    	<div class="request-section">
 		    	{{#fields}}
 		    		{{#if isTextField}}
 			        <div class="bau-request-item">
 			            <label for="{{name}}" class="single-line">{{label}}</label>
-			            <input type="text" class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" />
+			            <input type="text" class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}"{{#if placeholder}} placeholder="{{placeholder}}"{{/if}} />
 			        </div>
 			        {{/if}}
 		    		{{#if isTextArea}}
@@ -50,9 +55,37 @@
 			            	</div>
 			        	</div>
 			        {{/if}}
+			        {{#if isTable}}
+			        	<table class="entry-table">
+			        		<tr class="template-row">
+			        			<th colspan="2" class="table-header">
+		        					<div class="table-header-text">{{label}} #<span class="row-index"></span></div>
+			        				<a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash requirement-delete"></span></a>
+			        			</th>
+			        		</tr>
+			        		{{#rows}}
+								<tr class="template-row {{#if isLastRow}} last-row{{/if}}">
+									<th>{{label}}</th>
+									<td><input type="text" name=""{{#if placeholder}} placeholder="{{placeholder}}"{{/if}} /></td>
+								</tr>
+			        		{{/rows}}
+			        		<tr>
+			        			<td colspan="2" class="new-row">
+		        					<a class="btn btn-success add-row-button" role="button"><span class="glyphicon glyphicon-plus"></span> Add {{label}}</a>
+		    					</td>
+			        		</tr>
+			        	</table>
+			        {{/if}}
 		    	{{/fields}}
 		    	</div>
 	    	{{/sections}}
+
+	    	{{#if allowAttachments}}
+    			<h2>Attachments</h2>
+	    		<div class="attachments-container">
+
+	    		</div>
+	    	{{/if}}
 
 		    <div class="request-section right">
 		        <a class="btn btn-primary btn-lg" role="button" id="create-ticket">Submit Request</a>
@@ -61,6 +94,44 @@
 
 		<script src="/static/js/jquery.min.js"></script>
 		<script type="text/javascript">
+			var entryTables = $('.entry-table');
+			var rowUid = 0;
+
+			function setRowHeaderIndicies(table) {
+				var indicies = $('.row-index', table);
+				indicies.each(function(i) {
+					$(this).text(i + 1);
+				});
+			}
+
+			entryTables.each(function() {
+				var table = $(this);
+				var templateRows = $('.template-row', table);
+
+				function setRowHeaderIndiciesForTable() {
+					setRowHeaderIndicies(table);
+				}
+
+				table
+					.on('click', '.add-row-button', function() {
+						var currentUid = ++rowUid;
+
+						templateRows.clone()
+							.removeClass('template-row')
+							.data('rowUid', currentUid)
+							.prependTo(table).addClass('row-' + currentUid);
+
+						setRowHeaderIndiciesForTable();
+					})
+					.on('click', '.delete-row-button', function() {
+						var row = $(this).closest('tr');
+						var rowUid = row.data('rowUid');
+						$('.row-' + rowUid, table).remove();
+
+						setRowHeaderIndiciesForTable();
+					});
+			});
+
 			$('#create-ticket').on('click', function(){
 				var formFields = $('.request-item');
 
