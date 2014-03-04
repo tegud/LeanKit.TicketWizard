@@ -1,23 +1,53 @@
-<h2>Details of Ticket / Summary of Issue<h2>
-<p>
-	{{summary}}
-</p>
-<h2>Requirements</h2>
-<p>
-	{{requirements}}
-</p>
+<h2>A - Statement of Requirement - (Value – how can we measure?)<h2>
+{{#requirement}}
+	<table style="border: solid 1px #000; width: 100%;border-collapse:collapse;margin-bottom: 5px;">
+		{{#columns}}
+			<tr>
+				<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">{{label}}</th>
+				<td style="border: solid 1px #000;">{{value}}</td>
+			</tr>
+		{{/columns}}
+	</table>
+{{/requirement}}
 
-<h2>Background / Reason for change</h2>
-<p>
-	{{background}}
-</p>
+{{#if asIs}}
+	<h3>As Is</h3>
+	<p>
+		{{asIs}}
+	</p>
+{{/if}}
 
-<h2>Business Rationale / Impact</h2>
-<p>
-	{{businessRationale}}
-</p>
+{{#if toBe}}
+	<h3>To Be</h3>
+	<p>
+		{{toBe}}
+	</p>
+{{/if}}
 
-<h2>How will success be measured?</h2>
-<p>
-	{{successMeasurement}}
-</p>
+<h2>B - Functional Acceptance Criteria - (QA - Include other regression tests where applicable)<h2>
+{{#acceptanceCriteria}}
+	<table style="border: solid 1px #000; width: 100%;border-collapse:collapse;margin-bottom: 5px;">
+		{{#columns}}
+			<tr>
+				<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">{{label}}</th>
+				<td style="border: solid 1px #000;">{{value}}</td>
+			</tr>
+		{{/columns}}
+	</table>
+{{/acceptanceCriteria}}
+
+<h2>D - Story Reviewed</h2>
+<table style="border: solid 1px #000; width: 100%;border-collapse:collapse">
+	<tr>
+		<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">BA</th>
+		<td style="border: solid 1px #000;">{{baReviewer}}</td>
+	</tr>
+	<tr>
+		<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">QA</th>
+		<td style="border: solid 1px #000;">{{qaReviewer}}</td>
+	</tr>
+	<tr>
+		<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">Dev</th>
+		<td style="border: solid 1px #000;">{{devReviewer}}</td>
+	</tr>
+</table>

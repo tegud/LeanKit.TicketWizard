@@ -14,7 +14,7 @@
          "title": "A - Statement of Requirement - (Value – how can we measure?)",
          "fields": [
             {
-               "name": "Requiremet",
+               "name": "requirement",
                "label": "Requirement",
                "type": "table",
                "rows": [
@@ -31,11 +31,13 @@
             {
                "label":"As is",
                "type":"description",
+               "fillpoint": "asIs",
                "size":"small"
             },
             {
                "label":"To be",
                "type":"description",
+               "fillpoint": "toBe",
                "size":"small"
             }
          ]
@@ -44,7 +46,7 @@
          "title": "B - Functional Acceptance Criteria - (QA - Include other regression tests where applicable)",
          "fields": [
             {
-               "name": "acceptance-criteria",
+               "name": "acceptanceCriteria",
                "label": "Acceptance Criteria",
                "type": "table",
                "rows": [
@@ -54,6 +56,38 @@
                ]
             }
          ]
+      },
+      {
+         "title": "C - SEO Impact"
+      },
+      {
+         "title": "D - Story Reviewed",
+         "fields": [
+            {
+               "label":"BA",
+               "type":"description",
+               "size":"single-line",
+               "fillpoint":"baReviewer"
+            },
+            {
+               "label":"QA",
+               "type":"description",
+               "size":"single-line",
+               "fillpoint":"qaReviewer"
+            },
+            {
+               "label":"Dev",
+               "type":"description",
+               "size":"single-line",
+               "fillpoint":"devReviewer"
+            }
+         ]
+      },
+      {
+         "title": "E - Business Logic and System Touch Points"
+      },
+      {
+         "title": "F – NFR’s and Risks identified - Detail steps taken to mitigate"
       }
    ]
 }

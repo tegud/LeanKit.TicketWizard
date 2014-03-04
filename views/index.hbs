@@ -36,7 +36,7 @@
 		    		{{#if isTextField}}
 			        <div class="bau-request-item">
 			            <label for="{{name}}" class="single-line">{{label}}</label>
-			            <input type="text" class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}"{{#if placeholder}} placeholder="{{placeholder}}"{{/if}} />
+			            <input type="text" class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" {{#if fillpoint}}data-field-name="{{fillpoint}}"{{/if}}{{#if placeholder}} placeholder="{{placeholder}}"{{/if}} />
 			        </div>
 			        {{/if}}
 		    		{{#if isTextArea}}
@@ -188,7 +188,9 @@
 								currentRow.push({ label: inputField.data('fieldLabel'), value: currentValue });
 							});
 
-							tableRows.push(currentRow);
+							tableRows.push({
+								columns: currentRow
+							});
 						});
 
 						ticket.description[field.data('fieldName')] = tableRows;
@@ -209,6 +211,11 @@
 					contentType: 'application/json',
 					data: JSON.stringify(ticket),
 					cache: false
+				}).then(function() {
+					alert('Ticket Creation Complete');
+				},
+				function() {
+					alert('Ticket Creation Failed');
 				});
 			});
 		</script>
