@@ -119,7 +119,7 @@
 						templateRows.clone()
 							.removeClass('template-row')
 							.data('rowUid', currentUid)
-							.prependTo(table).addClass('row-' + currentUid);
+							.insertBefore(templateRows[0]).addClass('row-' + currentUid);
 
 						setRowHeaderIndiciesForTable();
 					})
