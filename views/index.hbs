@@ -56,7 +56,7 @@
 			        	</div>
 			        {{/if}}
 			        {{#if isTable}}
-			        	<table class="entry-table">
+			        	<table class="entry-table request-item" data-field-type="{{type}}">
 			        		<tr class="template-row">
 			        			<th colspan="2" class="table-header">
 		        					<div class="table-header-text">{{label}} #<span class="row-index"></span></div>
@@ -66,7 +66,7 @@
 			        		{{#rows}}
 								<tr class="template-row {{#if isLastRow}} last-row{{/if}}">
 									<th>{{label}}</th>
-									<td><input type="text" name=""{{#if placeholder}} placeholder="{{placeholder}}"{{/if}} /></td>
+									<td><input type="text" data-field-label="{{label}}" {{#if placeholder}} placeholder="{{placeholder}}"{{/if}} /></td>
 								</tr>
 			        		{{/rows}}
 			        		<tr>
@@ -165,6 +165,13 @@
 					}
 					else if (fieldType === 'description') {
 						ticket.description[field.data('fieldName')] = value;
+					}
+					else if (fieldType === 'table') {
+						var table = {};
+
+						
+
+						ticket.description[field.data('fieldName')] = table;
 					}
 					else if (fieldType === 'tag') {
 						if (valueIsArray) {
