@@ -37,7 +37,7 @@ var server = function() {
                 Description: description,
                 TypeId: cardTypeId,
                 Priority: 1,
-                Size: 0,
+                Size: req.body.size || 0,
                 IsBlocked: false,
                 BlockReason: '',
                 DueDate: '',
