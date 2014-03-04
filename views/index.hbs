@@ -56,15 +56,15 @@
 			        	</div>
 			        {{/if}}
 			        {{#if isTable}}
-			        	<table class="entry-table request-item" data-field-type="{{type}}">
-			        		<tr class="template-row">
+			        	<table class="entry-table request-item" data-field-type="{{type}}" data-field-name="{{name}}">
+			        		<tr class="template-row header-row">
 			        			<th colspan="2" class="table-header">
 		        					<div class="table-header-text">{{label}} #<span class="row-index"></span></div>
 			        				<a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash requirement-delete"></span></a>
 			        			</th>
 			        		</tr>
 			        		{{#rows}}
-								<tr class="template-row {{#if isLastRow}} last-row{{/if}}">
+								<tr class="template-row field-row {{#if isLastRow}} last-row{{/if}}">
 									<th>{{label}}</th>
 									<td><input type="text" data-field-label="{{label}}" {{#if placeholder}} placeholder="{{placeholder}}"{{/if}} /></td>
 								</tr>
@@ -167,11 +167,31 @@
 						ticket.description[field.data('fieldName')] = value;
 					}
 					else if (fieldType === 'table') {
-						var table = {};
+						var tableRows = [];
+						var headerRows = $('.header-row:not(.template-row)', field);
+						var rows = headerRows.map(function() {
+							return $('.row-' + $(this).data('rowUid') + ':not(.header-row)');
+						});
 
-						
+						rows.each(function() {
+							var setOfRows = this;
+							var currentRow = [];
+							
+							this.each(function() {
+								var inputField = $('input', this);
+								var currentValue = inputField.val();
 
-						ticket.description[field.data('fieldName')] = table;
+								if(!currentValue) {
+									return true;
+								}
+
+								currentRow.push({ label: inputField.data('fieldLabel'), value: currentValue });
+							});
+
+							tableRows.push(currentRow);
+						});
+
+						ticket.description[field.data('fieldName')] = tableRows;
 					}
 					else if (fieldType === 'tag') {
 						if (valueIsArray) {

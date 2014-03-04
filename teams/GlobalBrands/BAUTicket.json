@@ -19,7 +19,7 @@
                "type": "table",
                "rows": [
                   { "label": "As a", "type": "text", "placeholder": "LateRooms site user" },
-                  { "label": "Would like", "type": "text" },
+                  { "label": "I Would like", "type": "text" },
                   { "label": "So that", "type": "text", "isLastRow": "true" }
                ]
             }
@@ -30,11 +30,13 @@
          "fields":[
             {
                "label":"As is",
-               "type":"title"
+               "type":"description",
+               "size":"small"
             },
             {
                "label":"To be",
-               "type":"title"
+               "type":"description",
+               "size":"small"
             }
          ]
       },
