@@ -1,93 +1,120 @@
 {
-   "title":"LateRooms BAU Ticket",
-   "allowAttachments": false,
-   "sections":[
-      {
-         "fields":[
-            {
-               "label":"Name of Ticket",
-               "type":"title"
-            }
-         ]
-      },
-      {
-         "title": "A - Statement of Requirement - (Value – how can we measure?)",
-         "fields": [
-            {
-               "name": "requirement",
-               "label": "Requirement",
-               "type": "table",
-               "rows": [
-                  { "label": "As a", "type": "text", "placeholder": "LateRooms site user" },
-                  { "label": "I Would like", "type": "text" },
-                  { "label": "So that", "type": "text", "isLastRow": "true" }
-               ]
-            }
-         ]
-      },
-      {
-         "title": "(Optional)",
-         "fields":[
-            {
-               "label":"As is",
-               "type":"description",
-               "fillpoint": "asIs",
-               "size":"small"
-            },
-            {
-               "label":"To be",
-               "type":"description",
-               "fillpoint": "toBe",
-               "size":"small"
-            }
-         ]
-      },
-      {
-         "title": "B - Functional Acceptance Criteria - (QA - Include other regression tests where applicable)",
-         "fields": [
-            {
-               "name": "acceptanceCriteria",
-               "label": "Acceptance Criteria",
-               "type": "table",
-               "rows": [
-                  { "label": "Given", "type": "text" },
-                  { "label": "When", "type": "text" },
-                  { "label": "Then", "type": "text", "isLastRow": "true" }
-               ]
-            }
-         ]
-      },
-      {
-         "title": "C - SEO Impact"
-      },
-      {
-         "title": "D - Story Reviewed",
-         "fields": [
-            {
-               "label":"BA",
-               "type":"description",
-               "size":"single-line",
-               "fillpoint":"baReviewer"
-            },
-            {
-               "label":"QA",
-               "type":"description",
-               "size":"single-line",
-               "fillpoint":"qaReviewer"
-            },
-            {
-               "label":"Dev",
-               "type":"description",
-               "size":"single-line",
-               "fillpoint":"devReviewer"
-            }
-         ]
-      },
-      {
-         "title": "E - Business Logic and System Touch Points"
-      },
-      {
-         "title": "F – NFR’s and Risks identified - Detail steps taken to mitigate"
-      }
-   ]
+    "title": "LateRooms BAU Ticket",
+    "allowAttachments": false,
+    "sections": [
+        {
+            "fields": [
+                {
+                    "label": "Name of Ticket",
+                    "ticketProperty": "Title",
+                    "type": "title"
+                }
+            ]
+        },
+        {
+            "title": "A - Requirements",
+            "fields": [
+                {
+                    "name": "requirement",
+                    "label": "Requirement",
+                    "type": "table",
+                    "rows": [
+                        {
+                            "label": "As a",
+                            "type": "text",
+                            "singleline": true,
+                            "value": "LateRooms site user"
+                        },
+                        {
+                            "label": "I Would like",
+                            "multiline": true,
+                            "type": "description"
+                        },
+                        {
+                            "label": "So that",
+                            "multiline": true,
+                            "isLastRow": "true"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "B - Acceptance Criteria",
+            "fields": [
+                {
+                    "name": "acceptanceCriteria",
+                    "label": "Acceptance Criteria",
+                    "type": "table",
+                    "rows": [
+                        {
+                            "label": "Given",
+                            "singleline": true,
+                            "type": "text"
+                        },
+                        {
+                            "label": "When",
+                            "singleline": true,
+                            "type": "text"
+                        },
+                        {
+                            "label": "Then",
+                            "type": "text",
+                            "singleline": true,
+                            "isLastRow": "true"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "C - Story Reviewed",
+            "fields": [
+                {
+                    "label": "BA",
+                    "type": "description",
+                    "size": "single-line",
+                    "fillpoint": "baReviewer"
+                },
+                {
+                    "label": "QA",
+                    "type": "description",
+                    "size": "single-line",
+                    "fillpoint": "qaReviewer"
+                },
+                {
+                    "label": "Dev",
+                    "type": "description",
+                    "size": "single-line",
+                    "fillpoint": "devReviewer"
+                }
+            ]
+        },
+        {
+            "title": "(Optional)",
+            "fields": [
+                {
+                    "label": "As is",
+                    "type": "description",
+                    "fillpoint": "asIs",
+                    "size": "small"
+                },
+                {
+                    "label": "To be",
+                    "type": "description",
+                    "fillpoint": "toBe",
+                    "size": "small"
+                }
+            ]
+        },
+        {
+            "title": "D - SEO Impact"
+        },
+        {
+            "title": "E - Business Logic and System Touch Points"
+        },
+        {
+            "title": "F – NFR’s and Risks identified - Detail steps taken to mitigate"
+        }
+    ]
 }
