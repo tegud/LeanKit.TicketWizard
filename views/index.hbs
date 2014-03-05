@@ -36,13 +36,13 @@
 		    		{{#if isTextField}}
 			        <div class="bau-request-item">
 			            <label for="{{name}}" class="single-line">{{label}}</label>
-			            <input type="text" class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" {{#if fillpoint}}data-field-name="{{fillpoint}}"{{/if}}{{#if placeholder}} placeholder="{{placeholder}}"{{/if}} />
+			            <input type="text" class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" {{#if fillpoint}}data-field-name="{{fillpoint}}"{{/if}}{{#if placeholder}} placeholder="{{placeholder}}"{{/if}}{{#if value}} value="{{value}}"{{/if}} />
 			        </div>
 			        {{/if}}
 		    		{{#if isTextArea}}
 			        <div>
 				        <label for="{{name}}">{{label}}</label>
-				        <textarea class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" data-field-name="{{fillpoint}}"></textarea>
+				        <textarea class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" data-field-name="{{fillpoint}}">{{value}}</textarea>
 			        </div>
 			        {{/if}}
 			        {{#if isMultiChoice}}
@@ -66,7 +66,14 @@
 			        		{{#rows}}
 								<tr class="template-row field-row {{#if isLastRow}} last-row{{/if}}">
 									<th>{{label}}</th>
-									<td><input type="text" data-field-label="{{label}}" {{#if placeholder}} placeholder="{{placeholder}}"{{/if}} /></td>
+									<td{{#if multiline}} class="textarea-cell"{{/if}}>
+                                        {{#if multiline}}
+                                            <textarea data-field-label="{{label}}" class="table-textarea table-input">{{value}}</textarea>
+                                        {{/if}}
+                                        {{#if singleline}}
+                                            <input class="table-input" type="text" data-field-label="{{label}}" {{#if value}} value="{{value}}"{{/if}} />
+                                        {{/if}}
+                                    </td>
 								</tr>
 			        		{{/rows}}
 			        		<tr>
@@ -132,6 +139,14 @@
 					});
 			});
 
+            function insertNewLines(value) {
+                if(!value) {
+                    return value;
+                }
+
+                return value.replace(/\r?\n/g, "<br />");
+            }
+
 			$('#create-ticket').on('click', function(){
 				var formFields = $('.request-item');
 
@@ -164,7 +179,7 @@
 						ticket.title += value;
 					}
 					else if (fieldType === 'description') {
-						ticket.description[field.data('fieldName')] = value;
+						ticket.description[field.data('fieldName')] = insertNewLines(value);
 					}
 					else if (fieldType === 'table') {
 						var tableRows = [];
@@ -178,14 +193,14 @@
 							var currentRow = [];
 							
 							this.each(function() {
-								var inputField = $('input', this);
+								var inputField = $('.table-input', this);
 								var currentValue = inputField.val();
 
 								if(!currentValue) {
 									return true;
 								}
 
-								currentRow.push({ label: inputField.data('fieldLabel'), value: currentValue });
+								currentRow.push({ label: inputField.data('fieldLabel'), value: insertNewLines(currentValue) });
 							});
 
 							tableRows.push({
@@ -204,6 +219,8 @@
 						}
 					}
 				});
+
+                console.log(ticket);
 
 				$.ajax({
 					url: '{{createUrl}}',

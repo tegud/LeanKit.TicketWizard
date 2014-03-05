@@ -11,14 +11,12 @@ var BuildFormViewModel = require('./lib/FormViewModelFactory');
 
 var server = function() {
     var httpServer;
-
     var app = express();
 
     app.set('view engine', 'html');
     app.engine('html', hbs.__express);
 
     app.use(express.json());
-
     app.use("/static", express.static(__dirname + '/static'));
 
     app.post('/:team/:form/create', function(req, res) {
@@ -55,21 +53,39 @@ var server = function() {
         });
     });
 
-    app.get('/:team/:form', function(req, res) {
+    var displayForm = function(req, res) {
         var team = req.params.team;
         var form = req.params.form;
+        var ticketId = req.params.ticketId;
 
-        fs.readFile(__dirname + '/teams/' + team + '/' + form + '.json', { encoding: 'utf-8' }, function(err, fileContents) {
-            if(err) {
-                res.end('Form or Team not found');
-                return;
-            }
+        var render = function(card) {
+            fs.readFile(__dirname + '/teams/' + team + '/' + form + '.json', { encoding: 'utf-8' }, function(err, fileContents) {
+                if(err) {
+                    res.end('Form or Team not found');
+                    return;
+                }
 
-            var data = JSON.parse(fileContents);
-            var viewModel = BuildFormViewModel(team, form, data);
-            res.render('index.hbs', viewModel);
-        });
-    });
+                var data = JSON.parse(fileContents);
+                var viewModel = BuildFormViewModel(team, form, data, card);
+                res.render('index.hbs', viewModel);
+            });
+        };
+
+        if(ticketId) {
+            var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
+            var boardId = 91399429;
+
+            client.getCard(boardId, ticketId, function(err, card) {
+                render(card);
+            });
+        }
+        else {
+            render();
+        }
+    };
+
+    app.get('/:team/:form', displayForm);
+    app.get('/:team/:form/:ticketId', displayForm);
 
     return {
         start: function(options, callback) {

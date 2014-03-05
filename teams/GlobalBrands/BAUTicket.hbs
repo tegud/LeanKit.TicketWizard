@@ -1,53 +1,51 @@
-<h2>A - Statement of Requirement - (Value – how can we measure?)<h2>
-{{#requirement}}
-	<table style="border: solid 1px #000; width: 100%;border-collapse:collapse;margin-bottom: 5px;">
-		{{#columns}}
-			<tr>
-				<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">{{label}}</th>
-				<td style="border: solid 1px #000;">{{value}}</td>
-			</tr>
-		{{/columns}}
-	</table>
-{{/requirement}}
+<h2>A - Requirements</h2>
+<div class="data-table" data-field="requirement">
+    {{#requirement}}
+        <table style="border: solid 1px #000; width: 100%;border-collapse:collapse;margin-bottom: 5px;" class="data-table-row">
+            {{#columns}}
+                <tr>
+                    <th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">{{label}}</th>
+                    <td style="border: solid 1px #000;" class="data-table-column-cell" data-field-label="{{label}}">{{{value}}}</td>
+                </tr>
+            {{/columns}}
+        </table>
+    {{/requirement}}
+</div>
 
 {{#if asIs}}
 	<h3>As Is</h3>
-	<p>
-		{{asIs}}
-	</p>
+	<p class="data-value" data-field-value="asIs">{{{asIs}}}</p>
 {{/if}}
 
 {{#if toBe}}
 	<h3>To Be</h3>
-	<p>
-		{{toBe}}
-	</p>
+	<p class="data-value" data-field-value="toBe">{{{toBe}}}</p>
 {{/if}}
 
-<h2>B - Functional Acceptance Criteria - (QA - Include other regression tests where applicable)<h2>
+<h2>B - Acceptance Criteria</h2>
 {{#acceptanceCriteria}}
 	<table style="border: solid 1px #000; width: 100%;border-collapse:collapse;margin-bottom: 5px;">
 		{{#columns}}
 			<tr>
-				<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">{{label}}</th>
-				<td style="border: solid 1px #000;">{{value}}</td>
+				<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">{{{label}}}</th>
+				<td style="border: solid 1px #000;">{{{value}}}</td>
 			</tr>
 		{{/columns}}
 	</table>
 {{/acceptanceCriteria}}
 
-<h2>D - Story Reviewed</h2>
+<h2>C - Story Reviewed</h2>
 <table style="border: solid 1px #000; width: 100%;border-collapse:collapse">
 	<tr>
 		<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">BA</th>
-		<td style="border: solid 1px #000;">{{baReviewer}}</td>
+		<td style="border: solid 1px #000;">{{{baReviewer}}}</td>
 	</tr>
 	<tr>
 		<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">QA</th>
-		<td style="border: solid 1px #000;">{{qaReviewer}}</td>
+		<td style="border: solid 1px #000;">{{{qaReviewer}}}</td>
 	</tr>
 	<tr>
 		<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">Dev</th>
-		<td style="border: solid 1px #000;">{{devReviewer}}</td>
+		<td style="border: solid 1px #000;">{{{devReviewer}}}</td>
 	</tr>
 </table>

@@ -64,3 +64,7 @@ body { margin-bottom: 10px;font-family: Helvetica, arial, freesans, clean, sans-
 .new-row { text-align: right; }
 
 .template-row { display: none }
+
+.table-textarea { width:100%; height:50px }
+
+.entry-table .textarea-cell { padding-bottom: 0; }
