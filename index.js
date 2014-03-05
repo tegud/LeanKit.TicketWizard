@@ -7,7 +7,7 @@ var handlebars = hbs.handlebars;
 var LeanKitClient = require('leankit-client');
 var fs = require('fs');
 var _ = require('lodash');
-var BuildFormViewModel = require('./lib/FormViewModelFactory');
+var buildFormViewModel = require('./lib/FormViewModelFactory');
 
 var server = function() {
     var httpServer;
@@ -66,7 +66,7 @@ var server = function() {
             }
 
             var data = JSON.parse(fileContents);
-            var viewModel = BuildFormViewModel(team, form, data);
+            var viewModel = buildFormViewModel(team, form, data);
             res.render('index.hbs', viewModel);
         });
     });
