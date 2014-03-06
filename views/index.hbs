@@ -57,6 +57,18 @@
 			        {{/if}}
 			        {{#if isTable}}
 			        	<table class="entry-table request-item" data-field-type="{{type}}" data-field-name="{{name}}">
+			        		{{#if value}}
+			        			{{#value.rows}}
+			        				{{#columns}}
+										<tr class="field-row">
+											<th>{{label}}</th>
+											<td class="textarea-cell">
+	                                            <textarea data-field-label="{{label}}" class="table-textarea table-input">{{value}}</textarea>
+		                                    </td>
+										</tr>
+									{{/columns}}
+								{{/value.rows}}
+			        		{{/if}}
 			        		<tr class="template-row header-row">
 			        			<th colspan="2" class="table-header">
 		        					<div class="table-header-text">{{label}} #<span class="row-index"></span></div>
