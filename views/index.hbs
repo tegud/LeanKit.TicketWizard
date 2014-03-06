@@ -59,11 +59,22 @@
 			        	<table class="entry-table request-item" data-field-type="{{type}}" data-field-name="{{name}}">
 			        		{{#if value}}
 			        			{{#value.rows}}
+                                    <tr class="eader-row">
+                                        <th colspan="2" class="table-header">
+                                            <div class="table-header-text">{{../label}} #<span class="row-index">{{index}}</span></div>
+                                            <a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash requirement-delete"></span></a>
+                                        </th>
+                                    </tr>
 			        				{{#columns}}
 										<tr class="field-row">
 											<th>{{label}}</th>
-											<td class="textarea-cell">
-	                                            <textarea data-field-label="{{label}}" class="table-textarea table-input">{{value}}</textarea>
+                                            <td{{#if multiline}} class="textarea-cell"{{/if}}>
+                                                {{#if multiline}}
+                                                    <textarea data-field-label="{{label}}" class="table-textarea table-input">{{value}}</textarea>
+                                                {{/if}}
+                                                {{#if singleline}}
+                                                    <input class="table-input" type="text" data-field-label="{{label}}" value="{{value}}" />
+                                                {{/if}}
 		                                    </td>
 										</tr>
 									{{/columns}}
@@ -206,11 +217,7 @@
 							
 							this.each(function() {
 								var inputField = $('.table-input', this);
-								var currentValue = inputField.val();
-
-								if(!currentValue) {
-									return true;
-								}
+								var currentValue = inputField.val() || '';
 
 								currentRow.push({ label: inputField.data('fieldLabel'), value: insertNewLines(currentValue) });
 							});
