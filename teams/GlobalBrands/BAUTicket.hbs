@@ -23,16 +23,18 @@
 {{/if}}
 
 <h2>B - Acceptance Criteria</h2>
-{{#acceptanceCriteria}}
-	<table style="border: solid 1px #000; width: 100%;border-collapse:collapse;margin-bottom: 5px;">
-		{{#columns}}
-			<tr>
-				<th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">{{{label}}}</th>
-				<td style="border: solid 1px #000;">{{{value}}}</td>
-			</tr>
-		{{/columns}}
-	</table>
-{{/acceptanceCriteria}}
+<div class="data-table" data-field="acceptanceCriteria">
+    {{#acceptanceCriteria}}
+        <table style="border: solid 1px #000; width: 100%;border-collapse:collapse;margin-bottom: 5px;" class="data-table-row">
+            {{#columns}}
+                <tr>
+                    <th style="text-align: left; background-color: #ddd; width: 100px; font-size: 0.9em;border: solid 1px #000;">{{label}}</th>
+                    <td style="border: solid 1px #000;" class="data-table-column-cell" data-field-label="{{label}}">{{{value}}}</td>
+                </tr>
+            {{/columns}}
+        </table>
+    {{/acceptanceCriteria}}
+</div>
 
 <h2>C - Story Reviewed</h2>
 <table style="border: solid 1px #000; width: 100%;border-collapse:collapse">
