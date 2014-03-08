@@ -56,17 +56,21 @@
 			        	</div>
 			        {{/if}}
 			        {{#if isTable}}
+                        <!--
+							.data('rowUid', currentUid)
+                            .addClass('row-' + currentUid)
+                        -->
 			        	<table class="entry-table request-item" data-field-type="{{type}}" data-field-name="{{name}}">
 			        		{{#if value}}
 			        			{{#value.rows}}
-                                    <tr class="eader-row">
+                                    <tr class="header-row row-{{index}}" data-row-uid="{{index}}">
                                         <th colspan="2" class="table-header">
                                             <div class="table-header-text">{{../label}} #<span class="row-index">{{index}}</span></div>
                                             <a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash requirement-delete"></span></a>
                                         </th>
                                     </tr>
 			        				{{#columns}}
-										<tr class="field-row">
+										<tr class="field-row row-{{../index}}" data-row-uid="{{../index}}">
 											<th>{{label}}</th>
                                             <td{{#if multiline}} class="textarea-cell"{{/if}}>
                                                 {{#if multiline}}
@@ -125,7 +129,7 @@
 		<script src="/static/js/jquery.min.js"></script>
 		<script type="text/javascript">
 			var entryTables = $('.entry-table');
-			var rowUid = 0;
+			var rowUid = $('.header-row:not(.template-row)').size();
 
 			function setRowHeaderIndicies(table) {
 				var indicies = $('.row-index', table);
@@ -149,7 +153,8 @@
 						templateRows.clone()
 							.removeClass('template-row')
 							.data('rowUid', currentUid)
-							.insertBefore(templateRows[0]).addClass('row-' + currentUid);
+                            .addClass('row-' + currentUid)
+							.insertBefore(templateRows[0]);
 
 						setRowHeaderIndiciesForTable();
 					})
