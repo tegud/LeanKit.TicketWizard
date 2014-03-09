@@ -53,6 +53,28 @@ var server = function() {
         });
     });
 
+    app.post('/:team/:form/update/:id', function(req, res) {
+        var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
+        var boardId = 91399429;
+        var insertIntoLaneId = 91557453;
+        var cardTypeId = 91551782;
+
+        fs.readFile(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
+            var template = handlebars.compile(fileContents);
+            var description = template(req.body.description);
+
+            client.updateCardFields({
+                CardId : req.params.id,
+                Title: req.body.title,
+                Tags: req.body.tags.join(','),
+                Description: description
+            }, function(err, cardResp){
+                console.log(cardResp);
+                res.end(err);
+            });
+        });
+    });
+
     var displayForm = function(req, res) {
         var team = req.params.team;
         var form = req.params.form;
