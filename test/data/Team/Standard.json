@@ -1,0 +1,14 @@
+{
+    "title": "Test Ticket Form",
+    "sections": [
+        {
+            "fields": [
+                {
+                    "label": "Name of Ticket",
+                    "ticketProperty": "Title",
+                    "type": "title"
+                }
+            ]
+        }
+    ]
+}

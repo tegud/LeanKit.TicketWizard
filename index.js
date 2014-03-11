@@ -10,6 +10,7 @@ var buildFormViewModel = require('./lib/FormViewModelFactory');
 var server = function() {
     var httpServer;
     var app = express();
+    var dataRoot;
 
     app.set('view engine', 'html');
     app.engine('html', hbs.__express);
@@ -79,7 +80,8 @@ var server = function() {
         var ticketId = req.params.ticketId;
 
         var render = function(card) {
-            fs.readFile(__dirname + '/teams/' + team + '/' + form + '.json', { encoding: 'utf-8' }, function(err, fileContents) {
+            var path = __dirname + dataRoot + '/' + team + '/' + form + '.json';
+            fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
                 if(err) {
                     res.end('Form or Team not found');
                     return;
@@ -104,8 +106,8 @@ var server = function() {
         }
     };
 
-    app.get('/:team/:form', displayForm);
     app.get('/:team/:form/:ticketId', displayForm);
+    app.get('/:team/:form', displayForm);
 
     return {
         start: function(options, callback) {
@@ -115,6 +117,8 @@ var server = function() {
                     callback(undefined, httpServer);
                 }
             });
+
+            dataRoot = options.root || '/teams';
         },
         stop: function(callback) {
             httpServer.close(callback);
