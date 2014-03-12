@@ -4,9 +4,9 @@
         {
             "fields": [
                 {
+                    "type": "Title",
                     "label": "Name of Ticket",
-                    "ticketProperty": "Title",
-                    "type": "title"
+                    "ticketProperty": "Title"
                 }
             ]
         }
