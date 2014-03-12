@@ -4,15 +4,18 @@ var buildForm = require('../../lib/FormViewModel');
 describe('FormViewModel', function () {
     it('sets the Title component', function (done) {
         buildForm({
-            sections: [{ fields: [{ type: "Title" }] }]
+            sections: [{ fields: [{
+                type: "title"
+            }] }]
         }, function(err, viewModel) {
             expect(viewModel).to.eql({
-                "sections": [
+                sections: [
                     {
-                        "fields": [
+                        fields: [
                             {
-                                "type": "Title",
-                                "label": "Title"
+                                type: "title",
+                                label: "Title",
+                                inputType: "text"
                             }
                         ]
                     }
