@@ -5,7 +5,7 @@ var handlebars = hbs.handlebars;
 var LeanKitClient = require('leankit-client');
 var fs = require('fs');
 var _ = require('lodash');
-var buildFormViewModel = require('./lib/FormViewModelFactory');
+var buildFormViewModel = require('./lib/FormViewModel');
 
 var server = function() {
     var httpServer;
@@ -23,7 +23,6 @@ var server = function() {
         var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
-        var boardIdentifiers;
 
         fs.readFile(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
             var template = handlebars.compile(fileContents);
@@ -88,8 +87,9 @@ var server = function() {
                 }
 
                 var data = JSON.parse(fileContents);
-                var viewModel = buildFormViewModel(team, form, data, card);
-                res.render('index.hbs', viewModel);
+                buildFormViewModel(data, function(viewModel) {
+                    res.render('index.hbs', viewModel);
+                });
             });
         };
 
@@ -110,15 +110,39 @@ var server = function() {
     app.get('/:team/:form', displayForm);
 
     return {
-        start: function(options, callback) {
+        start: function(options, callback) {var hbs = require('hbs');
+            dataRoot = options.root || '/teams';
+
+            var components = {};
+            var partialsDir = __dirname + '/views/partials';
+            var filenames = fs.readdirSync(partialsDir);
+
+            filenames.forEach(function (filename) {
+                var matches = /^([^.]+).hbs$/.exec(filename);
+                if (!matches) {
+                    return;
+                }
+                var name = matches[1];
+                var template = fs.readFileSync(partialsDir + '/' + filename, 'utf8');
+                components[name] = hbs.compile(name, template);
+            });
+
+            hbs.registerHelper('renderComponent', function () {
+                //console.log('IN');
+                //console.log(components['textField']());
+                var template = fs.readFileSync(partialsDir + '/textField.hbs', 'utf8');
+                var compiled = hbs.compile(template);
+                var html = compiled();
+
+                return new hbs.handlebars.SafeString("<h1>HELLO</h1>");
+            });
+
             httpServer = http.createServer(app);
             httpServer.listen(options.port, function() {
                 if(callback) {
                     callback(undefined, httpServer);
                 }
             });
-
-            dataRoot = options.root || '/teams';
         },
         stop: function(callback) {
             httpServer.close(callback);
