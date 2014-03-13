@@ -10,6 +10,10 @@ var BuildFormViewModel = require('./lib/FormViewModelFactory');
 var server = function() {
     var httpServer;
     var app = express();
+    
+    var boardId = 32482312;
+    var insertIntoLaneId = 94256017;
+    var cardTypeId = 32482635;
 
     app.set('view engine', 'html');
     app.engine('html', hbs.__express);
@@ -19,9 +23,6 @@ var server = function() {
 
     app.post('/:team/:form/create', function(req, res) {
         var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
-        var boardId = 91399429;
-        var insertIntoLaneId = 91557453;
-        var cardTypeId = 91551782;
         var boardIdentifiers;
 
         fs.readFile(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
@@ -53,9 +54,6 @@ var server = function() {
 
     app.post('/:team/:form/update/:id', function(req, res) {
         var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
-        var boardId = 91399429;
-        var insertIntoLaneId = 91557453;
-        var cardTypeId = 91551782;
 
         fs.readFile(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
             var template = handlebars.compile(fileContents);
@@ -93,7 +91,6 @@ var server = function() {
 
         if(ticketId) {
             var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
-            var boardId = 91399429;
 
             client.getCard(boardId, ticketId, function(err, card) {
                 render(card);
