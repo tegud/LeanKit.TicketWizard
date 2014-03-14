@@ -2,7 +2,7 @@ var expect = require('expect.js');
 var buildForm = require('../../lib/FormViewModel');
 
 describe('FormViewModel', function () {
-    it.only('sets the Title component', function (done) {
+    it('sets the Title component', function (done) {
         buildForm({
             sections: [{ fields: [{
                 type: "text",
@@ -16,7 +16,8 @@ describe('FormViewModel', function () {
                             {
                                 type: "text",
                                 label: "Title",
-                                inputType: "textField"
+                                inputType: "textField",
+                                appendTo: "description"
                             }
                         ]
                     }
