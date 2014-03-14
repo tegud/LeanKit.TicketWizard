@@ -28,4 +28,13 @@ describe('text', function () {
             done();
         });
     });
+
+    it('sets inputType to textArea when size is multi-line', function(done) {
+        buildTitle({
+            size: 'multi-line'
+        }, function(err, title) {
+            expect(title.inputType).to.be('textArea');
+            done();
+        });
+    });
 });

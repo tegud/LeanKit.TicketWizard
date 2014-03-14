@@ -17,21 +17,30 @@
             "fields": [
                 {
                     "label": "BA",
-                    "type": "text",
-                    "size": "single-line",
-                    "fillpoint": "baReviewer"
+                    "type": "text"
                 },
                 {
                     "label": "QA",
-                    "type": "text",
-                    "size": "single-line",
-                    "fillpoint": "qaReviewer"
+                    "type": "text"
                 },
                 {
                     "label": "Dev",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "title": "(Optional)",
+            "fields": [
+                {
+                    "label": "As is",
                     "type": "text",
-                    "size": "single-line",
-                    "fillpoint": "devReviewer"
+                    "size": "multi-line"
+                },
+                {
+                    "label": "To be",
+                    "type": "text",
+                    "size": "multi-line"
                 }
             ]
         }
