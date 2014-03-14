@@ -19,7 +19,7 @@ var server = function() {
     app.use("/static", express.static(__dirname + '/static'));
 
     app.post('/:team/:form/create', function(req, res) {
-        var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
+        var client = LeanKitClient.newClient('tlrg', 'steve.elliot@laterooms.com', '10Six12');
         var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
@@ -52,7 +52,7 @@ var server = function() {
     });
 
     app.post('/:team/:form/update/:id', function(req, res) {
-        var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
+        var client = LeanKitClient.newClient('tlrg', 'steve.elliot@laterooms.com', '10Six12');
         var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
@@ -94,7 +94,7 @@ var server = function() {
         };
 
         if(ticketId) {
-            var client = LeanKitClient.newClient('lrtest', 'steve.elliot@laterooms.com', '10Six12');
+            var client = LeanKitClient.newClient('tlrg', 'steve.elliot@laterooms.com', '10Six12');
             var boardId = 91399429;
 
             client.getCard(boardId, ticketId, function(err, card) {
