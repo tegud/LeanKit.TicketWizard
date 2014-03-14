@@ -2,10 +2,11 @@ var expect = require('expect.js');
 var buildForm = require('../../lib/FormViewModel');
 
 describe('FormViewModel', function () {
-    it('sets the Title component', function (done) {
+    it.only('sets the Title component', function (done) {
         buildForm({
             sections: [{ fields: [{
-                type: "title"
+                type: "text",
+                label: "Title"
             }] }]
         }, function(err, viewModel) {
             expect(viewModel).to.eql({
@@ -13,9 +14,9 @@ describe('FormViewModel', function () {
                     {
                         fields: [
                             {
-                                type: "title",
+                                type: "text",
                                 label: "Title",
-                                inputType: "text"
+                                inputType: "textField"
                             }
                         ]
                     }

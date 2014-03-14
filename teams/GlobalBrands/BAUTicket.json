@@ -7,7 +7,31 @@
                 {
                     "label": "Name of Ticket",
                     "ticketProperty": "Title",
-                    "type": "title"
+                    "type": "text",
+                    "appendTo": "title"
+                }
+            ]
+        },
+        {
+            "title": "C - Story Reviewed",
+            "fields": [
+                {
+                    "label": "BA",
+                    "type": "text",
+                    "size": "single-line",
+                    "fillpoint": "baReviewer"
+                },
+                {
+                    "label": "QA",
+                    "type": "text",
+                    "size": "single-line",
+                    "fillpoint": "qaReviewer"
+                },
+                {
+                    "label": "Dev",
+                    "type": "text",
+                    "size": "single-line",
+                    "fillpoint": "devReviewer"
                 }
             ]
         }

@@ -27,14 +27,13 @@
 		    	<p>{{summary}}</p>
 		    {{/if}}
 
-            {{renderComponent}}
-
 		    {{#sections}}
 		    	{{#if title}}
 		    		<h2>{{title}}</h2>
 		    	{{/if}}
 		    	<div class="request-section">
 		    	{{#fields}}
+            		{{renderComponent inputType}}
 		    		{{#if isTextField}}
 			        <div class="bau-request-item">
 			            <label for="{{name}}" class="single-line">{{label}}</label>

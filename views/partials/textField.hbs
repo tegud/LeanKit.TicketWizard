@@ -1,1 +1,11 @@
-<h2>hello</h2>
+<div class="bau-request-item">
+    <label for="{{name}}" class="single-line">{{label}}</label>
+    <input type="text" 
+    	class="{{fieldCssClass}}" 
+    	id="{{name}}" 
+    	data-field-type="{{type}}" 
+    	{{#if fillpoint}}data-field-name="{{fillpoint}}"{{/if}}
+    	{{#if placeholder}} placeholder="{{placeholder}}"{{/if}}
+    	{{#if value}} value="{{value}}"{{/if}} 
+    	/>
+</div>

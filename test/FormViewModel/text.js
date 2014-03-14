@@ -1,5 +1,5 @@
 var expect = require('expect.js');
-var buildTitle = require('../../lib/FormViewModel/title');
+var buildTitle = require('../../lib/FormViewModel/text');
 
 describe('Title', function () {
     it('sets label to configured value', function (done) {

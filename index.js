@@ -87,7 +87,7 @@ var server = function() {
                 }
 
                 var data = JSON.parse(fileContents);
-                buildFormViewModel(data, function(viewModel) {
+                buildFormViewModel(data, function(err, viewModel) {
                     res.render('index.hbs', viewModel);
                 });
             });
@@ -124,17 +124,15 @@ var server = function() {
                 }
                 var name = matches[1];
                 var template = fs.readFileSync(partialsDir + '/' + filename, 'utf8');
-                components[name] = hbs.compile(name, template);
+                components[name] = hbs.handlebars.compile(template);
             });
 
-            hbs.registerHelper('renderComponent', function () {
-                //console.log('IN');
-                //console.log(components['textField']());
-                var template = fs.readFileSync(partialsDir + '/textField.hbs', 'utf8');
-                var compiled = hbs.compile(template);
-                var html = compiled();
-
-                return new hbs.handlebars.SafeString("<h1>HELLO</h1>");
+            hbs.registerHelper('renderComponent', function (name) {
+                var componentTemplate = components[name];
+                if(!componentTemplate) {
+                    return;
+                }
+                return new hbs.handlebars.SafeString(componentTemplate(this));
             });
 
             httpServer = http.createServer(app);
