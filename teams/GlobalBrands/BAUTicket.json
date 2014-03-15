@@ -13,6 +13,32 @@
             ]
         },
         {
+            "title": "A - Requirements",
+            "fields": [
+                {
+                    "name": "requirement",
+                    "label": "Requirement",
+                    "type": "table",
+                    "rows": [
+                        {
+                            "label": "As a",
+                            "type": "text"
+                        },
+                        {
+                            "type": "text",
+                            "label": "I Would like",
+                            "size": "multi-line"
+                        },
+                        {
+                            "type": "text",
+                            "label": "So that",
+                            "size": "multi-line"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "title": "C - Story Reviewed",
             "fields": [
                 {

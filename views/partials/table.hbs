@@ -1,0 +1,18 @@
+<table class="entry-table request-item" data-field-type="{{type}}" data-field-name="{{name}}">
+    <tr class="template-row header-row">
+        <th colspan="2" class="table-header">
+            <div class="table-header-text">{{label}} #<span class="row-index"></span></div>
+            <a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash requirement-delete"></span></a>
+        </th>
+    </tr>
+
+    {{#rows}}
+        {{renderComponent "tableRow"}}
+    {{/rows}}
+
+    <tr>
+        <td colspan="2" class="new-row">
+            <a class="btn btn-success add-row-button" role="button"><span class="glyphicon glyphicon-plus"></span> Add {{label}}</a>
+        </td>
+    </tr>
+</table>

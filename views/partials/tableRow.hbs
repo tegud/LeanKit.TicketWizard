@@ -1,0 +1,11 @@
+<tr class="template-row field-row {{#if isLastRow}} last-row{{/if}}">
+    <th>{{label}}</th>
+    <td{{#if multiline}} class="textarea-cell"{{/if}}>
+        {{#if multiline}}
+            <textarea data-field-label="{{label}}" class="table-textarea table-input">{{value}}</textarea>
+        {{/if}}
+        {{#if singleline}}
+            <input class="table-input" type="text" data-field-label="{{label}}" {{#if value}} value="{{value}}"{{/if}} />
+        {{/if}}
+    </td>
+</tr>
