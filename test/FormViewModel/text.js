@@ -37,4 +37,13 @@ describe('text', function () {
             done();
         });
     });
+
+    it('sets fieldCssClass to "request-item request-details small" when size is multi-line', function(done) {
+        buildTitle({
+            size: 'multi-line'
+        }, function(err, title) {
+            expect(title.inputType).to.be('textArea');
+            done();
+        });
+    });
 });

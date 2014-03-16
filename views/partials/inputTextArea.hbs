@@ -1,4 +1,4 @@
 <textarea
-    class="request-item request-details small{{#if fieldCssClass}} {{fieldCssClass}}{{/if}}"
+    {{#if fieldCssClass}} class="{{fieldCssClass}}"{{/if}}
     id="{{name}}"
     data-append-to="{{appendTo}}">{{#if value}}{{value}}{{/if}}</textarea>
