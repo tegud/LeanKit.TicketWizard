@@ -1,4 +1,4 @@
 <textarea
-    {{#if fieldCssClass}} class="{{fieldCssClass}}"{{/if}}
-    id="{{name}}"
-    data-append-to="{{appendTo}}">{{#if value}}{{value}}{{/if}}</textarea>
+    {{#if fieldCssClass}}class="{{fieldCssClass}}"{{/if}}
+    {{#if fieldId}}id="{{fieldId}}"{{/if}}
+    {{#if appendTo}}data-append-to="{{appendTo}}"{{/if}}>{{#if value}}{{value}}{{/if}}</textarea>

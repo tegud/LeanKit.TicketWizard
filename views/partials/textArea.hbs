@@ -1,4 +1,4 @@
 <div>
-    <label for="{{name}}">{{label}}</label>
+    <label{{#if fieldId}} for="{{fieldId}}"{{/if}}>{{label}}</label>
     {{renderComponent "inputTextArea"}}
 </div>

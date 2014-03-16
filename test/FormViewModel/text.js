@@ -1,5 +1,17 @@
 var expect = require('expect.js');
-var buildTitle = require('../../lib/FormViewModel/text');
+var proxyquire = require('proxyquire');
+
+var expectedId;
+
+var buildTitle = proxyquire ('../../lib/FormViewModel/text', {
+    './fieldId': function(prefix, callback) {
+        if(!callback) {
+            callback = prefix;
+        }
+
+        callback(null, expectedId);
+    }
+});
 
 describe('text', function () {
     it('sets label to configured value', function (done) {
@@ -42,7 +54,27 @@ describe('text', function () {
         buildTitle({
             size: 'multi-line'
         }, function(err, title) {
-            expect(title.inputType).to.be('textArea');
+            expect(title.fieldCssClass).to.be('request-item request-details small');
+            done();
+        });
+    });
+
+    it('sets fieldCssClass to "request-item" when size is single-line', function(done) {
+        buildTitle({
+            size: 'single-line'
+        }, function(err, title) {
+            expect(title.fieldCssClass).to.be('request-item');
+            done();
+        });
+    });
+
+    it('sets fieldId to value generated from fieldId', function(done) {
+        expectedId = 'formFieldId';
+
+        buildTitle({
+            size: 'single-line'
+        }, function(err, title) {
+            expect(title.fieldId).to.be('formFieldId');
             done();
         });
     });

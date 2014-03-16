@@ -1,24 +1,36 @@
 var expect = require('expect.js');
-var buildForm = require('../../lib/FormViewModel');
+var proxyquire = require('proxyquire');
+
+var buildForm = proxyquire ('../../lib/FormViewModel', {
+    './components': {
+        'text': function(config, callback) {
+            if(!callback) {
+                callback = prefix;
+            }
+
+            callback(null, { type: 'textField' });
+        },
+        'table': function(config, callback) {
+            if(!callback) {
+                callback = prefix;
+            }
+
+            callback(null, { type: 'table' });
+        }
+    }
+});
 
 describe('FormViewModel', function () {
     it('sets the Title component', function (done) {
         buildForm({
             sections: [{ fields: [{
-                type: "text",
-                label: "Title"
+                type: "text"
             }] }]
         }, function(err, viewModel) {
             expect(viewModel).to.eql({
                 sections: [
                     {
-                        fields: [
-                            {
-                                label: "Title",
-                                inputType: "textField",
-                                appendTo: "description"
-                            }
-                        ]
+                        fields: [ { type: "textField" } ]
                     }
                 ]
             });
@@ -30,21 +42,13 @@ describe('FormViewModel', function () {
     it('sets the table components', function(done) {
         buildForm({
             sections: [{ fields: [{
-                type: "table",
-                label: "Requirements"
+                type: "table"
             }] }]
         }, function(err, viewModel) {
             expect(viewModel).to.eql({
                 sections: [
                     {
-                        fields: [
-                            {
-                                label: "Requirements",
-                                inputType: "table",
-                                appendTo: "description",
-                                rows: []
-                            }
-                        ]
+                        fields: [ { type: "table" } ]
                     }
                 ]
             });
