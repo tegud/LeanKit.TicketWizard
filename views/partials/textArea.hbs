@@ -1,7 +1,4 @@
 <div>
     <label for="{{name}}">{{label}}</label>
-    <textarea
-        class="request-item request-details small{{#if fieldCssClass}} {{fieldCssClass}}{{/if}}"
-    	id="{{name}}"
-    	data-append-to="{{appendTo}}">{{#if value}}{{value}}{{/if}}</textarea>
+    {{renderComponent "inputTextArea"}}
 </div>

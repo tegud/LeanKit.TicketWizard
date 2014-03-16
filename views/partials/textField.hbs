@@ -1,10 +1,4 @@
 <div class="bau-request-item">
     <label for="{{name}}" class="single-line">{{label}}</label>
-    <input type="text" 
-    	class="{{fieldCssClass}}" 
-    	id="{{name}}" 
-    	data-append-to="{{appendTo}}" 
-    	{{#if placeholder}} placeholder="{{placeholder}}"{{/if}}
-    	{{#if value}} value="{{value}}"{{/if}} 
-    	/>
+    {{renderComponent "inputTextField"}}
 </div>

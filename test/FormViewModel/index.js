@@ -14,10 +14,35 @@ describe('FormViewModel', function () {
                     {
                         fields: [
                             {
-                                type: "text",
                                 label: "Title",
                                 inputType: "textField",
                                 appendTo: "description"
+                            }
+                        ]
+                    }
+                ]
+            });
+
+            done();
+        });
+    });
+
+    it('sets the table components', function(done) {
+        buildForm({
+            sections: [{ fields: [{
+                type: "table",
+                label: "Requirements"
+            }] }]
+        }, function(err, viewModel) {
+            expect(viewModel).to.eql({
+                sections: [
+                    {
+                        fields: [
+                            {
+                                label: "Requirements",
+                                inputType: "table",
+                                appendTo: "description",
+                                rows: []
                             }
                         ]
                     }
