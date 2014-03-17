@@ -1,18 +1,18 @@
 var expect = require('expect.js');
 var proxyquire = require('proxyquire');
 
-var buildForm = proxyquire ('../../lib/FormViewModel', {
+var buildForm = proxyquire ('../../../lib/FormViewModel', {
     './components': {
         'text': function(config, callback) {
             if(!callback) {
-                callback = prefix;
+                callback = config;
             }
 
             callback(null, { type: 'textField' });
         },
         'table': function(config, callback) {
             if(!callback) {
-                callback = prefix;
+                callback = config;
             }
 
             callback(null, { type: 'table' });

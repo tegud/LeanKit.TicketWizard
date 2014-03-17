@@ -1,6 +1,6 @@
 var request = require('supertest');
 var proxyquire = require('proxyquire').noCallThru();
-var app = proxyquire('../index', {
+var app = proxyquire('../../index', {
     'leankit-client': {
         newClient: function() {
             return {

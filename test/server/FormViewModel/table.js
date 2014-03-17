@@ -1,5 +1,5 @@
 var expect = require('expect.js');
-var buildTable = require('../../lib/FormViewModel/table');
+var buildTable = require('../../../lib/FormViewModel/table');
 
 describe('table', function () {
     it('sets lastRow to true for last row', function(done) {

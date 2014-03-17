@@ -3,7 +3,7 @@ var proxyquire = require('proxyquire');
 
 var expectedId;
 
-var buildTitle = proxyquire ('../../lib/FormViewModel/text', {
+var buildTitle = proxyquire ('../../../lib/FormViewModel/text', {
     './fieldId': function(prefix, callback) {
         if(!callback) {
             callback = prefix;

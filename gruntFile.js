@@ -9,7 +9,9 @@ module.exports = function (grunt) {
         'Gruntfile.js',
         'index.js',
         'lib/*.js',
-        'test/*.js'
+        'static/js/TicketWizard/**/*.js',
+        'test/server/**/*.js',
+        'test/client/tests/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc',
@@ -17,16 +19,21 @@ module.exports = function (grunt) {
       }
     },
     mochacli: {
-      src: ['test/**/*.js'],
+      src: ['test/server/**/*.js'],
         options: {
           timeout: 3000,
           ignoreLeaks: false,
           ui: 'bdd',
           reporter: 'spec'
         }
+    },
+    karma: {
+      unit: {
+          configFile: 'test/client/karma.conf.js'
+      }
     }
   });
 
     grunt.registerTask('default', ['jshint', 'mochacli']);
-    grunt.registerTask('test', ['jshint', 'mochacli']);
+    grunt.registerTask('test', ['jshint', 'mochacli', 'karma']);
 };

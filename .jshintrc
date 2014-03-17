@@ -23,6 +23,10 @@
         "Buffer":true,
         "setTimeout":true,
         "setImmediate":true,
-        "__dirname":true
+        "__dirname":true,
+        "TW": true,
+        "$": true,
+        "expect": true,
+        "window": true
     }
 }

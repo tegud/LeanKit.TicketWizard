@@ -1,5 +1,5 @@
 var expect = require('expect.js');
-var fieldIdGenerator = require('../../lib/FormViewModel/fieldId');
+var fieldIdGenerator = require('../../../lib/FormViewModel/fieldId');
 
 describe('fieldId', function () {
     it('returns formField-0 for first id generated', function (done) {
