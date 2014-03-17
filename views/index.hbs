@@ -34,18 +34,7 @@
 		    	<div class="request-section">
 		    	{{#fields}}
             		{{renderComponent inputType}}
-		    		{{#if isTextField}}
-			        <div class="bau-request-item">
-			            <label for="{{name}}" class="single-line">{{label}}</label>
-			            <input type="text" class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" {{#if fillpoint}}data-field-name="{{fillpoint}}"{{/if}}{{#if placeholder}} placeholder="{{placeholder}}"{{/if}}{{#if value}} value="{{value}}"{{/if}} />
-			        </div>
-			        {{/if}}
-		    		{{#if isTextArea}}
-			        <div>
-				        <label for="{{name}}">{{label}}</label>
-				        <textarea class="{{fieldCssClass}}" id="{{name}}" data-field-type="{{type}}" data-field-name="{{fillpoint}}">{{value}}</textarea>
-			        </div>
-			        {{/if}}
+
 			        {{#if isMultiChoice}}
 			        	<div class="bau-request-item">
 			                <label>{{label}}</label>
@@ -127,7 +116,7 @@
 		    </div>
 		</div>
 
-		<script src="/static/js/jquery.min.js"></script>
+		<script src="/static/js/lib/jquery.min.js"></script>
 		<script type="text/javascript">
 			var entryTables = $('.entry-table');
 			var rowUid = $('.header-row:not(.template-row)').size();
@@ -244,8 +233,6 @@
 						}
 					}
 				});
-
-                console.log(ticket);
 
 				$.ajax({
 					url: '{{createUrl}}',
