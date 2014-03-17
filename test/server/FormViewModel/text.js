@@ -78,4 +78,14 @@ describe('text', function () {
             done();
         });
     });
+
+    it('when appendTo is description fillpoint defaults to camel cased field name', function(done) {
+        buildTitle({
+            label: 'One Two Three',
+            appendTo: 'description'
+        }, function(err, title) {
+            expect(title.fillpoint).to.be('oneTwoThree');
+            done();
+        });
+    });
 });
