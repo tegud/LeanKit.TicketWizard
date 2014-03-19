@@ -6,6 +6,7 @@ module.exports = function(config) {
             'test/client/lib/expect.js',
             'static/js/lib/jquery.min.js',
             'static/js/lib/bootstrap.min.js',
+            'static/js/TicketWizard/TicketViewModel.js',
             'static/js/TicketWizard/**/*.js',
             'test/client/tests/**/*.js'
         ],

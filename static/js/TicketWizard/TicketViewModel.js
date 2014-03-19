@@ -3,37 +3,6 @@
 
     window['TW'] = window['TW'] || {};
 
-    var componentBuilders = {
-        'field': function buildFromField(field) {
-            return field.val().replace(/\r?\n/g, "<br />");
-        },
-        'table': function buildFromTable(item) {
-            var rows = [];
-            var headerRows = $('.header-row:not(.template-row)', item);
-            var rowElements = headerRows.map(function() {
-                return $('.row-' + $(this).data('rowUid') + ':not(.header-row)');
-            });
-
-            rowElements.each(function() {
-                var columns = [];
-
-                this.each(function() {
-                    var inputField = $('.table-input', this);
-
-                    columns.push({ name: inputField.data('fillpoint'), value: componentBuilders['field'](inputField)} );
-                });
-
-                rows.push({
-                    columns: columns
-                });
-            });
-
-            return {
-                rows: rows
-            };
-        }
-    };
-
     function Model() {
         var model = {
             title: [],
@@ -60,7 +29,7 @@
             return 'table';
         }
 
-        return 'field';
+        return 'text';
     }
 
     TW.TicketViewModel = function(rootElement) {
@@ -69,11 +38,12 @@
                 var model = new Model();
 
                 $('.request-item', rootElement).each(function() {
-                    var item = $(this);
-                    var appendTo = item.data('appendTo') || 'description';
-                    var fillpoint = item.data('fillpoint');
-                    var component = getComponentFromTagName(this.tagName);
-                    var value = componentBuilders[component](item);
+                    var field = $(this);
+                    var appendTo = field.data('appendTo') || 'description';
+                    var fillpoint = field.data('fillpoint');
+                    var componentName = getComponentFromTagName(this.tagName);
+                    var component = TW.getComponentViewModel(componentName);
+                    var value = component(field);
 
                     model[appendTo](value, fillpoint);
                 });
