@@ -55,7 +55,6 @@
             .on('click', '.row-delete', function() {
                 var row = $(this).closest('tr');
                 var rowUid = row.data('rowUid');
-                console.log(rowUid);
                 $('.row-' + rowUid, element).remove();
             });
     });
