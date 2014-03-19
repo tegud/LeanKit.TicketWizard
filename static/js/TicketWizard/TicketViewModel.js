@@ -24,26 +24,18 @@
         };
     }
 
-    function getComponentFromTagName(tagName) {
-        if(tagName.toLowerCase() === 'table') {
-            return 'table';
-        }
-
-        return 'text';
-    }
-
     TW.TicketViewModel = function(rootElement) {
+        var formFields = new TW.FormFields(rootElement);
+
         return {
             build: function() {
                 var model = new Model();
 
-                $('.request-item', rootElement).each(function() {
-                    var field = $(this);
-                    var appendTo = field.data('appendTo') || 'description';
-                    var fillpoint = field.data('fillpoint');
-                    var componentName = getComponentFromTagName(this.tagName);
-                    var component = TW.getComponentViewModel(componentName);
-                    var value = component(field);
+                formFields.each(function() {
+                    var appendTo = this.field.data('appendTo') || 'description';
+                    var fillpoint = this.field.data('fillpoint');
+                    var component = TW.getComponentViewModel(this.componentName);
+                    var value = component(this.field);
 
                     model[appendTo](value, fillpoint);
                 });

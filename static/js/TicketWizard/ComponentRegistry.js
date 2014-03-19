@@ -6,14 +6,6 @@
     var components = {};
     var setups = {};
 
-    function getComponentFromTagName(tagName) {
-        if(tagName.toLowerCase() === 'table') {
-            return 'table';
-        }
-
-        return 'text';
-    }
-
     TW.registerComponentViewModel = function(name, component) {
         components[name] = component;
     };
@@ -27,12 +19,11 @@
     };
 
     TW.runComponentSetup = function(rootElement) {
-        $('.request-item', rootElement).each(function() {
-            var field = $(this);
-            var componentName = getComponentFromTagName(this.tagName);
+        var formFields = new TW.FormFields(rootElement);
 
-            if(setups[componentName]) {
-                setups[componentName](field);
+        formFields.each(function() {
+            if(setups[this.componentName]) {
+                setups[this.componentName](this.field);
             }
         });
     };

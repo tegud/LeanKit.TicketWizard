@@ -20,7 +20,7 @@
             </div>
         </header>
 
-		<div class="request-form">
+		<div class="request-form" id="request-form">
 		    <h1>{{title}}</h1>
 
 		    {{#if summary}}
@@ -117,12 +117,34 @@
 		</div>
 
 		<script src="/static/js/lib/jquery.min.js"></script>
+        <script src="/static/js/TicketWizard/FormFields.js"></script>
         <script src="/static/js/TicketWizard/ComponentRegistry.js"></script>
         <script src="/static/js/TicketWizard/Components/text.js"></script>
         <script src="/static/js/TicketWizard/Components/table.js"></script>
         <script src="/static/js/TicketWizard/TicketViewModel.js"></script>
 
 		<script type="text/javascript">
+            TW.runComponentSetup($('#request-form'));
+            var viewModelBuilder = TW.TicketViewModel($('#request-form'));
+
+            $('#create-ticket').on('click', function(){
+                var ticket = viewModelBuilder.build();
+                console.log(ticket);
+
+                $.ajax({
+                    url: '{{createUrl}}',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(ticket),
+                    cache: false
+                }).then(function() {
+                    alert('Complete');
+                },
+                function() {
+                    alert('Failed');
+                });
+            });
+/*
 			var entryTables = $('.entry-table');
 			var rowUid = $('.header-row:not(.template-row)').size();
 
@@ -214,7 +236,7 @@
 						rows.each(function() {
 							var setOfRows = this;
 							var currentRow = [];
-							
+
 							this.each(function() {
 								var inputField = $('.table-input', this);
 								var currentValue = inputField.val() || '';
@@ -233,7 +255,7 @@
 						if (valueIsArray) {
 							ticket.tags.push.apply(ticket.tags, value);
 						}
-						else { 
+						else {
 							ticket.tags.push(value);
 						}
 					}
@@ -251,7 +273,7 @@
 				function() {
 					alert('Failed');
 				});
-			});
+			});*/
 		</script>
 	</body>
 </html>

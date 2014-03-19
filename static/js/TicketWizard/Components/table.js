@@ -43,7 +43,7 @@
             .on('click', '.add-row-button', function() {
                 var currentRowUid = rowUid++;
 
-                var rows = templateRows
+                templateRows
                     .clone()
                     .insertBefore(templateRows[0])
                     .removeClass('template-row')

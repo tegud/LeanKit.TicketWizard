@@ -16,8 +16,8 @@
             "title": "A - Requirements",
             "fields": [
                 {
-                    "name": "requirement",
                     "label": "Requirement",
+                    "fillpoint": "requirements",
                     "type": "table",
                     "rows": [
                         {

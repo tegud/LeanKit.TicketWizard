@@ -33,6 +33,25 @@ describe('table', function () {
         });
     });
 
+    it('sets row fillpoint to label', function(done) {
+        buildTable({
+            label: 'a'
+        }, function(err, table) {
+            expect(table.fillpoint).to.be('a');
+            done();
+        });
+    });
+
+    it('sets row fillpoint to configured fillpoint when specified', function(done) {
+        buildTable({
+            label: 'a',
+            fillpoint: 'b'
+        }, function(err, table) {
+            expect(table.fillpoint).to.be('b');
+            done();
+        });
+    });
+
     it('sets row inputType', function(done) {
         buildTable({
             rows: [
