@@ -7,7 +7,7 @@
                 '<tr class="template-row header-row">' +
                 '<th colspan="2" class="table-header">' +
                 '<div class="table-header-text">Requirement #<span class="row-index"></span></div>' +
-                '<a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash requirement-delete"></span></a>' +
+                '<a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash row-delete"></span></a>' +
                 '</th>' +
                 '</tr>' +
                 '<tr class="template-row field-row ">' +
@@ -37,7 +37,7 @@
                 var tableElement = $('#test-fixture').prepend('<tr class="header-row" data-row-uid="0">' +
                     '<th colspan="2">' +
                     '<div>Requirement #<span class="row-index">1</span></div>' +
-                    '<a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash requirement-delete"></span></a>' +
+                    '<a class="btn btn-danger delete-row-button" role="button"><span class="glyphicon glyphicon-trash row-delete"></span></a>' +
                     '</th>' +
                     '</tr>' +
                     '<tr class="field-row row-0">' +
@@ -124,6 +124,19 @@
                 addRowButton.trigger('click');
 
                 expect($('tr.row-0.header-row .row-index', table).text()).to.be('1');
+            });
+
+            it('sets table description model', function() {
+                var table = $('#test-fixture');
+                var addRowButton = $('.add-row-button', table);
+                var removeRowButton = $('.row-delete', table);
+
+                TW.runComponentSetup();
+
+                addRowButton.trigger('click');
+                removeRowButton.trigger('click');
+
+                expect($('tr:not(.template-row):not(.new-item-row)', table).length).to.be(0);
             });
         });
     });
