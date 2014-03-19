@@ -43,19 +43,21 @@
             .on('click', '.add-row-button', function() {
                 var currentRowUid = rowUid++;
 
-                templateRows
+                var rows = templateRows
                     .clone()
+                    .insertBefore(templateRows[0])
                     .removeClass('template-row')
                     .addClass('row-' + currentRowUid)
-                    .data('rowUid', currentRowUid)
-                    .insertBefore(templateRows[0]);
+                    .data('rowUid', currentRowUid);
 
                 setHeaderIndicies(element);
             })
-            .on('click', '.row-delete', function() {
+            .on('click', '.delete-row-button', function() {
                 var row = $(this).closest('tr');
                 var rowUid = row.data('rowUid');
                 $('.row-' + rowUid, element).remove();
+                
+                setHeaderIndicies(element);
             });
     });
 })();

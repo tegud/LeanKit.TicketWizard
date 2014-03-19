@@ -126,17 +126,35 @@
                 expect($('tr.row-0.header-row .row-index', table).text()).to.be('1');
             });
 
-            it('sets table description model', function() {
+            it('remove button removes row', function() {
                 var table = $('#test-fixture');
                 var addRowButton = $('.add-row-button', table);
-                var removeRowButton = $('.row-delete', table);
+                var removeRowButton;
 
                 TW.runComponentSetup();
 
                 addRowButton.trigger('click');
+
+                removeRowButton = $('tr:not(.template-row) .delete-row-button', table);
                 removeRowButton.trigger('click');
 
                 expect($('tr:not(.template-row):not(.new-item-row)', table).length).to.be(0);
+            });
+
+            it('remove button reindexes header text', function() {
+                var table = $('#test-fixture');
+                var addRowButton = $('.add-row-button', table);
+                var removeRowButton;
+
+                TW.runComponentSetup();
+
+                addRowButton.trigger('click');
+                addRowButton.trigger('click');
+
+                removeRowButton = $('tr:not(.template-row) .delete-row-button:first', table);
+                removeRowButton.trigger('click');
+
+                expect($('tr.row-1.header-row .row-index', table).text()).to.be('1');
             });
         });
     });
