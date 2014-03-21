@@ -57,8 +57,9 @@ var server = function() {
         var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
+        var path = __dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs';
 
-        fs.readFile(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
+        fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
             var template = handlebars.compile(fileContents);
             var description = template(req.body.description);
 
@@ -81,6 +82,9 @@ var server = function() {
 
         var render = function(card) {
             var path = __dirname + dataRoot + '/' + team + '/' + form + '.json';
+
+            console.log(path);
+
             fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
                 if(err) {
                     res.end('Form or Team not found');

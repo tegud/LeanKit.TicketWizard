@@ -14,14 +14,14 @@ var app = proxyquire('../../index', {
     }
 });
 
-describe.skip('TicketWizard', function () {
+describe('TicketWizard', function () {
     var server;
     var theApp;
 
     beforeEach(function(done) {
         theApp = new app();
         theApp.start({
-            root: '/test/data'
+            root: '/test/server/data'
         }, function(err, httpServer) {
             server = httpServer;
             done();
@@ -41,7 +41,7 @@ describe.skip('TicketWizard', function () {
             .end(done);
     });
 
-    it('loads populated ticket entry form for specified team and form with ticket information', function(done) {
+    it.skip('loads populated ticket entry form for specified team and form with ticket information', function(done) {
         request(server)
             .get('/Team/Standard/12345')
             .expect(200)
