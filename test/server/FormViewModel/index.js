@@ -21,6 +21,20 @@ var buildForm = proxyquire ('../../../lib/FormViewModel', {
 });
 
 describe('FormViewModel', function () {
+    it('sets the page title', function(done) {
+        buildForm({
+            title: 'PageTitle',
+            sections: []
+        }, function(err, viewModel) {
+            expect(viewModel).to.eql({
+                title: 'PageTitle',
+                sections: []
+            });
+
+            done();
+        });
+    });
+
     it('sets the Title component', function (done) {
         buildForm({
             sections: [{ fields: [{

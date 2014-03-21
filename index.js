@@ -11,6 +11,7 @@ var server = function() {
     var httpServer;
     var app = express();
     var dataRoot;
+    var credentials;
 
     app.set('view engine', 'html');
     app.engine('html', hbs.__express);
@@ -19,7 +20,7 @@ var server = function() {
     app.use("/static", express.static(__dirname + '/static'));
 
     app.post('/:team/:form/create', function(req, res) {
-        var client = LeanKitClient.newClient('tlrg', 'steve.elliot@laterooms.com', '10Six12');
+        var client = LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
         var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
@@ -52,7 +53,7 @@ var server = function() {
     });
 
     app.post('/:team/:form/update/:id', function(req, res) {
-        var client = LeanKitClient.newClient('tlrg', 'steve.elliot@laterooms.com', '10Six12');
+        var client = LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
         var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
@@ -94,7 +95,7 @@ var server = function() {
         };
 
         if(ticketId) {
-            var client = LeanKitClient.newClient('tlrg', 'steve.elliot@laterooms.com', '10Six12');
+            var client = LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
             var boardId = 91399429;
 
             client.getCard(boardId, ticketId, function(err, card) {
@@ -134,6 +135,8 @@ var server = function() {
                 }
                 return new hbs.handlebars.SafeString(componentTemplate(this));
             });
+
+            credentials = JSON.parse(fs.readFileSync(__dirname + '/credentials.json', 'utf8'));
 
             httpServer = http.createServer(app);
             httpServer.listen(options.port, function() {
