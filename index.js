@@ -8,11 +8,90 @@ var _ = require('lodash');
 var async = require('async');
 var buildFormViewModel = require('./lib/FormViewModel');
 
+var Components = function() {
+    var components = {};
+
+    hbs.registerHelper('renderComponent', function (name) {
+        var componentTemplate = components[name];
+        if(!componentTemplate) {
+            return;
+        }
+        return new hbs.handlebars.SafeString(componentTemplate(this));
+    });
+
+    return {
+        registerDir: function(partialsDir) {
+            return function(callback) {
+                async.waterfall([
+                    function(callback) {
+                        callback(null, partialsDir);
+                    },
+                    fs.readdir,
+                    function(filenames, callback) {
+                        async.each(filenames, function(filename, callback) {
+                            var matches = /^([^.]+).hbs$/.exec(filename);
+                            if (!matches) {
+                                return;
+                            }
+                            var name = matches[1];
+                            fs.readFile(partialsDir + '/' + filename, 'utf8', function(err, template) {
+                                components[name] = hbs.handlebars.compile(template);
+                                callback();
+                            });
+                        }, callback);
+                    }
+                ], callback);
+            };
+        }
+    };
+};
+
+var leanKitClientBuilder = (function() {
+    return {
+        buildFromPath: function(filePath, callback) {
+            async.waterfall([
+                function(callback) {
+                    fs.readFile(filePath, 'utf8', callback);
+                },
+                function(data, callback) {
+                    var credentials = JSON.parse(data);
+
+                    callback(null, function () {
+                        return LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
+                    });
+                }
+            ],
+                callback);
+        }
+    };
+})();
+
+var AppServer = function(app, options) {
+    var httpServer = http.createServer(app);
+
+    return {
+        start: function(callback) {
+            httpServer.listen(options.port, function(err) {
+                console.log('start');
+                callback(err, httpServer);
+            });
+        },
+        stop: function(callback) {
+            httpServer.close(callback);
+        }
+    };
+};
+
 var server = function() {
-    var httpServer;
     var app = express();
     var dataRoot;
     var credentials;
+    var clientBuilder;
+    var httpServer;
+    var stop = function(callback) {
+        console.log('hello');
+        httpServer.stop(callback);
+    };
 
     app.set('view engine', 'html');
     app.engine('html', hbs.__express);
@@ -55,9 +134,6 @@ var server = function() {
 
     app.post('/:team/:form/update/:id', function(req, res) {
         var client = LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
-        var boardId = 91399429;
-        var insertIntoLaneId = 91557453;
-        var cardTypeId = 91551782;
         var path = __dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs';
 
         fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
@@ -115,71 +191,30 @@ var server = function() {
     app.get('/:team/:form/:ticketId', displayForm);
     app.get('/:team/:form', displayForm);
 
-    var Components = function() {
-        var components = {};
-
-        return {
-            registerDir: function(partialsDir) {
-                return function(callback) {
-                    async.waterfall([
-                        function(callback) {
-                            callback(null, partialsDir);
-                        },
-                        fs.readdir,
-                        function(filenames, callback) {
-                            async.each(filenames, function(filename, callback) {
-                                var matches = /^([^.]+).hbs$/.exec(filename);
-                                if (!matches) {
-                                    return;
-                                }
-                                var name = matches[1];
-                                fs.readFile(partialsDir + '/' + filename, 'utf8', function(err, template) {
-                                    components[name] = hbs.handlebars.compile(template);
-                                    callback();
-                                });
-                            }, callback);
-                        }
-                    ], callback);
-                };
-            },
-            getComponent: function(name) {
-                return components[name];
-            }
-        };
-    };
 
     return {
         start: function(options, callback) {
             var components = new Components();
-            var partialsDir = __dirname + '/views/partials';
-
-            hbs.registerHelper('renderComponent', function (name) {
-                var componentTemplate = components.getComponent(name);
-                if(!componentTemplate) {
-                    return;
-                }
-                return new hbs.handlebars.SafeString(componentTemplate(this));
-            });
+            var setUpLeanKitClientBuilder = function(callback) {
+                leanKitClientBuilder.buildFromPath(__dirname + '/credentials.json', function(builder) {
+                    clientBuilder = builder;
+                    callback();
+                });
+            };
 
             dataRoot = options.root || '/teams';
+            httpServer = new AppServer(app, options);
 
-            async.waterfall([components.registerDir(partialsDir),
-                function(callback) {
-                fs.readFile(__dirname + '/credentials.json', 'utf8', callback);
-            }], function(err, data) {
-                credentials = JSON.parse(data);
-
-                httpServer = http.createServer(app);
-                httpServer.listen(options.port, function() {
-                    if(callback) {
-                        callback(undefined, httpServer);
-                    }
-                });
+            async.waterfall([
+                components.registerDir(__dirname + '/views/partials'),
+                setUpLeanKitClientBuilder,
+                httpServer.start
+            ],
+            function(err, results) {
+                callback(err, results);
             });
         },
-        stop: function(callback) {
-            httpServer.close(callback);
-        }
+        stop: stop
     };
 };
 
