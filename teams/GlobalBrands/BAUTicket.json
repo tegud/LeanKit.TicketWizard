@@ -39,6 +39,30 @@
             ]
         },
         {
+            "title": "B - Acceptance Criteria",
+            "fields": [
+                {
+                    "fillpoint": "acceptanceCriteria",
+                    "label": "Acceptance Criteria",
+                    "type": "table",
+                    "rows": [
+                        {
+                            "label": "Given",
+                            "type": "text"
+                        },
+                        {
+                            "label": "When",
+                            "type": "text"
+                        },
+                        {
+                            "label": "Then",
+                            "type": "text"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "title": "C - Story Reviewed",
             "fields": [
                 {

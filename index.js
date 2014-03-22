@@ -5,6 +5,7 @@ var handlebars = hbs.handlebars;
 var LeanKitClient = require('leankit-client');
 var fs = require('fs');
 var _ = require('lodash');
+var async = require('async');
 var buildFormViewModel = require('./lib/FormViewModel');
 
 var server = function() {
@@ -114,23 +115,19 @@ var server = function() {
     app.get('/:team/:form/:ticketId', displayForm);
     app.get('/:team/:form', displayForm);
 
-    return {
-        start: function(options, callback) {var hbs = require('hbs');
-            dataRoot = options.root || '/teams';
+    var Components = function() {
 
+        return {
+            registerDir: function(partialsDir, callback) {
+                
+            }
+        };
+    };
+
+    return {
+        start: function(options, callback) {
             var components = {};
             var partialsDir = __dirname + '/views/partials';
-            var filenames = fs.readdirSync(partialsDir);
-
-            filenames.forEach(function (filename) {
-                var matches = /^([^.]+).hbs$/.exec(filename);
-                if (!matches) {
-                    return;
-                }
-                var name = matches[1];
-                var template = fs.readFileSync(partialsDir + '/' + filename, 'utf8');
-                components[name] = hbs.handlebars.compile(template);
-            });
 
             hbs.registerHelper('renderComponent', function (name) {
                 var componentTemplate = components[name];
@@ -140,13 +137,35 @@ var server = function() {
                 return new hbs.handlebars.SafeString(componentTemplate(this));
             });
 
-            credentials = JSON.parse(fs.readFileSync(__dirname + '/credentials.json', 'utf8'));
+            dataRoot = options.root || '/teams';
 
-            httpServer = http.createServer(app);
-            httpServer.listen(options.port, function() {
-                if(callback) {
-                    callback(undefined, httpServer);
-                }
+            async.waterfall([function(callback) {
+                    callback(null, partialsDir);
+                },
+                fs.readdir,
+                function(filenames, callback) {
+                async.each(filenames, function(filename, callback) {
+                    var matches = /^([^.]+).hbs$/.exec(filename);
+                    if (!matches) {
+                        return;
+                    }
+                    var name = matches[1];
+                    fs.readFile(partialsDir + '/' + filename, 'utf8', function(err, template) {
+                        components[name] = hbs.handlebars.compile(template);
+                        callback();
+                    });
+                }, callback);
+            }, function(callback) {
+                fs.readFile(__dirname + '/credentials.json', 'utf8', callback);
+            }], function(err, data) {
+                credentials = JSON.parse(data);
+
+                httpServer = http.createServer(app);
+                httpServer.listen(options.port, function() {
+                    if(callback) {
+                        callback(undefined, httpServer);
+                    }
+                });
             });
         },
         stop: function(callback) {
