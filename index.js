@@ -83,8 +83,6 @@ var server = function() {
         var render = function(card) {
             var path = __dirname + dataRoot + '/' + team + '/' + form + '.json';
 
-            console.log(path);
-
             fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
                 if(err) {
                     res.end('Form or Team not found');
@@ -132,9 +130,7 @@ var server = function() {
                 setUpLeanKitClientBuilder,
                 httpServer.start
             ],
-            function(err, results) {
-                callback(err, results);
-            });
+            callback);
         },
         stop: function(callback) {
             httpServer.stop(callback);
