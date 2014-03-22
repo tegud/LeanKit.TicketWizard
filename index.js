@@ -7,80 +7,9 @@ var fs = require('fs');
 var _ = require('lodash');
 var async = require('async');
 var buildFormViewModel = require('./lib/FormViewModel');
-
-var Components = function() {
-    var components = {};
-
-    hbs.registerHelper('renderComponent', function (name) {
-        var componentTemplate = components[name];
-        if(!componentTemplate) {
-            return;
-        }
-        return new hbs.handlebars.SafeString(componentTemplate(this));
-    });
-
-    return {
-        registerDir: function(partialsDir) {
-            return function(callback) {
-                async.waterfall([
-                    function(callback) {
-                        callback(null, partialsDir);
-                    },
-                    fs.readdir,
-                    function(filenames, callback) {
-                        async.each(filenames, function(filename, callback) {
-                            var matches = /^([^.]+).hbs$/.exec(filename);
-                            if (!matches) {
-                                return;
-                            }
-                            var name = matches[1];
-                            fs.readFile(partialsDir + '/' + filename, 'utf8', function(err, template) {
-                                components[name] = hbs.handlebars.compile(template);
-                                callback();
-                            });
-                        }, callback);
-                    }
-                ], callback);
-            };
-        }
-    };
-};
-
-var leanKitClientBuilder = (function() {
-    return {
-        buildFromPath: function(filePath, callback) {
-            async.waterfall([
-                function(callback) {
-                    fs.readFile(filePath, 'utf8', callback);
-                },
-                function(data, callback) {
-                    var credentials = JSON.parse(data);
-
-                    callback(null, function () {
-                        return LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
-                    });
-                }
-            ],
-                callback);
-        }
-    };
-})();
-
-var AppServer = function(app, options) {
-    var httpServer = http.createServer(app);
-
-    return {
-        start: function(callback) {
-            httpServer.listen(options.port, function(err) {
-                console.log('start');
-                callback(err, httpServer);
-            });
-        },
-        stop: function(callback) {
-            httpServer.close(callback);
-        }
-    };
-};
+var Components = require('./lib/Components');
+var AppServer = require('./lib/AppServer');
+var leanKitClientBuilder = require('./lib/LeanKitClientBuilder');
 
 var server = function() {
     var app = express();
@@ -88,10 +17,6 @@ var server = function() {
     var credentials;
     var clientBuilder;
     var httpServer;
-    var stop = function(callback) {
-        console.log('hello');
-        httpServer.stop(callback);
-    };
 
     app.set('view engine', 'html');
     app.engine('html', hbs.__express);
@@ -214,7 +139,9 @@ var server = function() {
                 callback(err, results);
             });
         },
-        stop: stop
+        stop: function(callback) {
+            httpServer.stop(callback);
+        }
     };
 };
 
