@@ -116,21 +116,45 @@ var server = function() {
     app.get('/:team/:form', displayForm);
 
     var Components = function() {
+        var components = {};
 
         return {
-            registerDir: function(partialsDir, callback) {
-                
+            registerDir: function(partialsDir) {
+                return function(callback) {
+                    async.waterfall([
+                        function(callback) {
+                            callback(null, partialsDir);
+                        },
+                        fs.readdir,
+                        function(filenames, callback) {
+                            async.each(filenames, function(filename, callback) {
+                                var matches = /^([^.]+).hbs$/.exec(filename);
+                                if (!matches) {
+                                    return;
+                                }
+                                var name = matches[1];
+                                fs.readFile(partialsDir + '/' + filename, 'utf8', function(err, template) {
+                                    components[name] = hbs.handlebars.compile(template);
+                                    callback();
+                                });
+                            }, callback);
+                        }
+                    ], callback);
+                };
+            },
+            getComponent: function(name) {
+                return components[name];
             }
         };
     };
 
     return {
         start: function(options, callback) {
-            var components = {};
+            var components = new Components();
             var partialsDir = __dirname + '/views/partials';
 
             hbs.registerHelper('renderComponent', function (name) {
-                var componentTemplate = components[name];
+                var componentTemplate = components.getComponent(name);
                 if(!componentTemplate) {
                     return;
                 }
@@ -139,23 +163,8 @@ var server = function() {
 
             dataRoot = options.root || '/teams';
 
-            async.waterfall([function(callback) {
-                    callback(null, partialsDir);
-                },
-                fs.readdir,
-                function(filenames, callback) {
-                async.each(filenames, function(filename, callback) {
-                    var matches = /^([^.]+).hbs$/.exec(filename);
-                    if (!matches) {
-                        return;
-                    }
-                    var name = matches[1];
-                    fs.readFile(partialsDir + '/' + filename, 'utf8', function(err, template) {
-                        components[name] = hbs.handlebars.compile(template);
-                        callback();
-                    });
-                }, callback);
-            }, function(callback) {
+            async.waterfall([components.registerDir(partialsDir),
+                function(callback) {
                 fs.readFile(__dirname + '/credentials.json', 'utf8', callback);
             }], function(err, data) {
                 credentials = JSON.parse(data);
