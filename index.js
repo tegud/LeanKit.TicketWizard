@@ -2,7 +2,6 @@ var express = require('express');
 var http = require('http');
 var hbs = require('hbs');
 var handlebars = hbs.handlebars;
-var LeanKitClient = require('leankit-client');
 var fs = require('fs');
 var _ = require('lodash');
 var async = require('async');
@@ -14,7 +13,6 @@ var leanKitClientBuilder = require('./lib/LeanKitClientBuilder');
 var server = function() {
     var app = express();
     var dataRoot;
-    var credentials;
     var clientBuilder;
     var httpServer;
 
@@ -25,7 +23,7 @@ var server = function() {
     app.use("/static", express.static(__dirname + '/static'));
 
     app.post('/:team/:form/create', function(req, res) {
-        var client = LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
+        var client = clientBuilder();
         var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
@@ -58,7 +56,7 @@ var server = function() {
     });
 
     app.post('/:team/:form/update/:id', function(req, res) {
-        var client = LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
+        var client = clientBuilder();
         var path = __dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs';
 
         fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
@@ -101,7 +99,7 @@ var server = function() {
         };
 
         if(ticketId) {
-            var client = LeanKitClient.newClient(credentials.organisation, credentials.username, credentials.password);
+            var client = clientBuilder();
             var boardId = 91399429;
 
             client.getCard(boardId, ticketId, function(err, card) {
@@ -115,7 +113,6 @@ var server = function() {
 
     app.get('/:team/:form/:ticketId', displayForm);
     app.get('/:team/:form', displayForm);
-
 
     return {
         start: function(options, callback) {
