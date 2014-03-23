@@ -23,13 +23,25 @@ var buildForm = proxyquire ('../../../lib/FormViewModel', {
 describe('FormViewModel', function () {
     it('sets the page title', function(done) {
         buildForm({
+            url: {},
             title: 'PageTitle',
             sections: []
         }, function(err, viewModel) {
-            expect(viewModel).to.eql({
-                title: 'PageTitle',
-                sections: []
-            });
+            expect(viewModel.title).to.eql('PageTitle');
+
+            done();
+        });
+    });
+
+    it('sets the page post url', function(done) {
+        buildForm({
+            url: {
+                team: 'test',
+                form: 'one'
+            },
+            sections: []
+        }, function(err, viewModel) {
+            expect(viewModel.postToUrl).to.eql('/test/one/create');
 
             done();
         });
@@ -37,11 +49,15 @@ describe('FormViewModel', function () {
 
     it('sets the Title component', function (done) {
         buildForm({
-            sections: [{ fields: [{
+            url: {
+                team: 'test',
+                form: 'one'
+            },sections: [{ fields: [{
                 type: "text"
             }] }]
         }, function(err, viewModel) {
             expect(viewModel).to.eql({
+                postToUrl: '/test/one/create',
                 sections: [
                     {
                         fields: [ { type: "textField" } ]
@@ -55,11 +71,15 @@ describe('FormViewModel', function () {
 
     it('sets the table components', function(done) {
         buildForm({
-            sections: [{ fields: [{
+            url: {
+                team: 'test',
+                form: 'one'
+            },sections: [{ fields: [{
                 type: "table"
             }] }]
         }, function(err, viewModel) {
             expect(viewModel).to.eql({
+                postToUrl: '/test/one/create',
                 sections: [
                     {
                         fields: [ { type: "table" } ]

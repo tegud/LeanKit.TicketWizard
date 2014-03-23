@@ -69,19 +69,20 @@ var server = function() {
                 Tags: req.body.tags.join(','),
                 Description: description
             }, function(err, cardResp){
-                console.log(cardResp);
                 res.end(err);
             });
         });
     });
 
     var displayForm = function(req, res) {
-        var team = req.params.team;
-        var form = req.params.form;
-        var ticketId = req.params.ticketId;
+        var url = {
+            team: req.params.team,
+            form: req.params.form,
+            ticketId: req.params.ticketId
+        };
 
         var render = function(card) {
-            var path = __dirname + dataRoot + '/' + team + '/' + form + '.json';
+            var path = __dirname + dataRoot + '/' + url.team + '/' + url.form + '.json';
 
             fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
                 if(err) {
@@ -90,17 +91,20 @@ var server = function() {
                 }
 
                 var data = JSON.parse(fileContents);
+
+                data.url = url;
+
                 buildFormViewModel(data, function(err, viewModel) {
                     res.render('index.hbs', viewModel);
                 });
             });
         };
 
-        if(ticketId) {
+        if(url.ticketId) {
             var client = clientBuilder();
             var boardId = 91399429;
 
-            client.getCard(boardId, ticketId, function(err, card) {
+            client.getCard(boardId, url.ticketId, function(err, card) {
                 render(card);
             });
         }
