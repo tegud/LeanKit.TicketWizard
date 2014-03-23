@@ -132,7 +132,7 @@
                 console.log(ticket);
 
                 $.ajax({
-                    url: '{{createUrl}}',
+                    url: '{{postToUrl}}',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(ticket),
