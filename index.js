@@ -10,6 +10,14 @@ var Components = require('./lib/Components');
 var AppServer = require('./lib/AppServer');
 var leanKitClientBuilder = require('./lib/LeanKitClientBuilder');
 
+var Teams = (function() {
+    return {
+        loadFromDir: function(teamDir) {
+
+        }
+    };
+})();
+
 var server = function() {
     var app = express();
     var dataRoot;
@@ -129,12 +137,14 @@ var server = function() {
             dataRoot = options.root || '/teams';
             httpServer = new AppServer(app, options);
 
-            async.waterfall([
+            async.parallel([
                 components.registerDir(__dirname + '/views/partials'),
                 setUpLeanKitClientBuilder,
                 httpServer.start
             ],
-            callback);
+            function(err, results) {
+                (callback || function() {})(err, results[2]);
+            });
         },
         stop: function(callback) {
             httpServer.stop(callback);
