@@ -8,7 +8,7 @@ var async = require('async');
 var buildFormViewModel = require('./lib/FormViewModel');
 var Components = require('./lib/Components');
 var AppServer = require('./lib/AppServer');
-var leanKitClientBuilder = require('./lib/LeanKitClientBuilder');
+var leanKitClientBuilder = require('./lib/LeanKit/ClientBuilder');
 
 var Teams = (function() {
     return {
