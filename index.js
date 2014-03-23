@@ -10,10 +10,85 @@ var Components = require('./lib/Components');
 var AppServer = require('./lib/AppServer');
 var leanKitClientBuilder = require('./lib/LeanKit/ClientBuilder');
 
-var Teams = (function() {
-    return {
-        loadFromDir: function(teamDir) {
+function readFileAsUtf8(file, callback) {
+    return fs.readFile(file, { encoding: 'utf-8' }, callback);
+}
 
+function getFolders(dir, callback) {
+    async.waterfall([
+        function(callback) {
+            fs.readdir(dir, callback);
+        },
+        function(files, callback) {
+            async.filter(files, function(file, callback) {
+                fs.stat(dir + '/' + file, function(err, fileInfo) {
+                    callback(!err && fileInfo.isDirectory());
+                });
+            }, function(folders) {
+                callback(null, folders);
+            });
+        },
+    ],
+        callback);
+}
+
+function readTeamFolder(folder, callback) {
+    async.waterfall([
+        function(callback) {
+            fs.readdir(folder, callback);
+        },
+        function(files, callback) {
+            async.reduce(files, {}, function(memo, file, callback) {
+                var startOfExtension = file.indexOf('.');
+
+                if(startOfExtension > -1 && file === 'board.json') {
+                    memo.hasBoardMetaData = true;
+                }
+                else if (startOfExtension > -1) {
+                    var formName = file.substring(0, startOfExtension);
+                    var fileExtension = file.substring(startOfExtension + 1);
+
+                    if(!memo[formName]) {
+                        memo[formName] = {};
+                    }
+
+                    if(fileExtension === 'hbs') {
+                        memo[formName].hasTemplate = true;
+                    }
+                    else if (fileExtension === 'json'){
+                        memo[formName].hasFormData = true;
+                    }
+                }
+
+                callback(null, memo);
+            }, callback);
+        }
+    ], callback);
+}
+
+var teams = (function() {
+
+    var teams = {};
+
+    return {
+        loadFromDir: function(teamDir, callback) {
+            async.waterfall([
+                function(callback) {
+                    getFolders(teamDir, callback);
+                },
+                function(folders, callback) {
+                    async.map(folders, function(folder, callback) {
+                        readTeamFolder(teamDir + '/' + folder, function(err, data) {
+                            teams[folder] = data;
+                            callback();
+                        });
+                    }, callback);
+                },
+                function(data, callback) {
+                    console.log(teams);
+                    callback();
+                }
+            ], callback);
         }
     };
 })();
@@ -127,11 +202,13 @@ var server = function() {
     return {
         start: function(options, callback) {
             var components = new Components();
-            var setUpLeanKitClientBuilder = function(callback) {
-                leanKitClientBuilder.buildFromPath(__dirname + '/credentials.json', function(builder) {
-                    clientBuilder = builder;
-                    callback();
-                });
+            var setUpLeanKitClientBuilder = function(path) {
+                return function(callback) {
+                    leanKitClientBuilder.buildFromPath(path, function(builder) {
+                        clientBuilder = builder;
+                        callback();
+                    });
+                };
             };
 
             dataRoot = options.root || '/teams';
@@ -139,8 +216,11 @@ var server = function() {
 
             async.parallel([
                 components.registerDir(__dirname + '/views/partials'),
-                setUpLeanKitClientBuilder,
-                httpServer.start
+                setUpLeanKitClientBuilder(__dirname + '/credentials.json'),
+                httpServer.start,
+                function(callback) {
+                    teams.loadFromDir(__dirname + '/teams', callback);
+                }
             ],
             function(err, results) {
                 (callback || function() {})(err, results[2]);
