@@ -62,6 +62,9 @@ function readTeamFolder(folder, callback) {
 
                 callback(null, memo);
             }, callback);
+        },
+        function(teamMetaData, callback) {
+            callback(null, teamMetaData);
         }
     ], callback);
 }
