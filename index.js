@@ -84,6 +84,7 @@ var server = function() {
         };
 
         var render = function(card) {
+            // todo: Get teams() to generate.
             var path = __dirname + dataRoot + '/' + url.team + '/' + url.form + '.json';
 
             fsUtil.readFileAsUtf8(path, function(err, fileContents) {
