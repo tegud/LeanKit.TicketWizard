@@ -9,92 +9,8 @@ var buildFormViewModel = require('./lib/FormViewModel');
 var Components = require('./lib/Components');
 var AppServer = require('./lib/AppServer');
 var leanKitClientBuilder = require('./lib/LeanKit/ClientBuilder');
-
-function readFileAsUtf8(file, callback) {
-    return fs.readFile(file, { encoding: 'utf-8' }, callback);
-}
-
-function getFolders(dir, callback) {
-    async.waterfall([
-        function(callback) {
-            fs.readdir(dir, callback);
-        },
-        function(files, callback) {
-            async.filter(files, function(file, callback) {
-                fs.stat(dir + '/' + file, function(err, fileInfo) {
-                    callback(!err && fileInfo.isDirectory());
-                });
-            }, function(folders) {
-                callback(null, folders);
-            });
-        },
-    ],
-        callback);
-}
-
-function readTeamFolder(folder, callback) {
-    async.waterfall([
-        function(callback) {
-            fs.readdir(folder, callback);
-        },
-        function(files, callback) {
-            async.reduce(files, {}, function(memo, file, callback) {
-                var startOfExtension = file.indexOf('.');
-
-                if(startOfExtension > -1 && file === 'board.json') {
-                    memo.hasBoardMetaData = true;
-                }
-                else if (startOfExtension > -1) {
-                    var formName = file.substring(0, startOfExtension);
-                    var fileExtension = file.substring(startOfExtension + 1);
-
-                    if(!memo[formName]) {
-                        memo[formName] = {};
-                    }
-
-                    if(fileExtension === 'hbs') {
-                        memo[formName].hasTemplate = true;
-                    }
-                    else if (fileExtension === 'json'){
-                        memo[formName].hasFormData = true;
-                    }
-                }
-
-                callback(null, memo);
-            }, callback);
-        },
-        function(teamMetaData, callback) {
-            callback(null, teamMetaData);
-        }
-    ], callback);
-}
-
-var teams = (function() {
-
-    var teams = {};
-
-    return {
-        loadFromDir: function(teamDir, callback) {
-            async.waterfall([
-                function(callback) {
-                    getFolders(teamDir, callback);
-                },
-                function(folders, callback) {
-                    async.map(folders, function(folder, callback) {
-                        readTeamFolder(teamDir + '/' + folder, function(err, data) {
-                            teams[folder] = data;
-                            callback();
-                        });
-                    }, callback);
-                },
-                function(data, callback) {
-                    console.log(teams);
-                    callback();
-                }
-            ], callback);
-        }
-    };
-})();
+var fsUtil = require('./lib/fsUtils');
+var teams = require('./lib/Teams');
 
 var server = function() {
     var app = express();
@@ -114,7 +30,7 @@ var server = function() {
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
 
-        fs.readFile(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', { encoding: 'utf-8' }, function(err, fileContents) {
+        fsUtil.readFileAsUtf8(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', function(err, fileContents) {
             var template = handlebars.compile(fileContents);
             var description = template(req.body.description);
 
@@ -145,7 +61,7 @@ var server = function() {
         var client = clientBuilder();
         var path = __dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs';
 
-        fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
+        fsUtil.readFileAsUtf8(path, function(err, fileContents) {
             var template = handlebars.compile(fileContents);
             var description = template(req.body.description);
 
@@ -170,7 +86,7 @@ var server = function() {
         var render = function(card) {
             var path = __dirname + dataRoot + '/' + url.team + '/' + url.form + '.json';
 
-            fs.readFile(path, { encoding: 'utf-8' }, function(err, fileContents) {
+            fsUtil.readFileAsUtf8(path, function(err, fileContents) {
                 if(err) {
                     res.end('Form or Team not found');
                     return;
