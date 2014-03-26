@@ -109,13 +109,11 @@ var server = function() {
     return {
         start: function(options, callback) {
             var components = new Components();
-            var setUpLeanKitClientBuilder = function(path) {
-                return function(callback) {
-                    leanKitClientBuilder.buildFromPath(path, function(builder) {
-                        clientBuilder = builder;
-                        callback();
-                    });
-                };
+            var setUpLeanKitClientBuilder = function(path, callback) {
+                leanKitClientBuilder.buildFromPath(path, function(builder) {
+                    clientBuilder = builder;
+                    callback();
+                });
             };
 
             teams.setRoot(__dirname + (options.root || '/teams'));
@@ -123,11 +121,9 @@ var server = function() {
 
             async.parallel([
                 components.registerDir(__dirname + '/views/partials'),
-                setUpLeanKitClientBuilder(__dirname + '/credentials.json'),
+                setUpLeanKitClientBuilder.bind(undefined, __dirname + '/credentials.json'),
                 httpServer.start,
-                function(callback) {
-                    teams.loadFromDir(__dirname + '/teams', callback);
-                }
+                teams.loadFromDir.bind(undefined, __dirname + '/teams')
             ],
             function(err, results) {
                 (callback || function() {})(err, results[2]);
