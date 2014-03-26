@@ -1,11 +1,8 @@
 var express = require('express');
-var http = require('http');
 var hbs = require('hbs');
 var handlebars = hbs.handlebars;
-var fs = require('fs');
 var _ = require('lodash');
 var async = require('async');
-var buildFormViewModel = require('./lib/FormViewModel');
 var Components = require('./lib/Components');
 var AppServer = require('./lib/AppServer');
 var leanKitClientBuilder = require('./lib/LeanKit/ClientBuilder');
@@ -14,7 +11,6 @@ var teams = require('./lib/Teams');
 
 var server = function() {
     var app = express();
-    var dataRoot;
     var clientBuilder;
     var httpServer;
 
@@ -84,22 +80,13 @@ var server = function() {
         };
 
         var render = function(card) {
-            // todo: Get teams() to generate.
-            var path = __dirname + dataRoot + '/' + url.team + '/' + url.form + '.json';
-
-            fsUtil.readFileAsUtf8(path, function(err, fileContents) {
+            teams.getTemplateForUrl(url, function(err, viewModel) {
                 if(err) {
                     res.end('Form or Team not found');
                     return;
                 }
 
-                var data = JSON.parse(fileContents);
-
-                data.url = url;
-
-                buildFormViewModel(data, function(err, viewModel) {
-                    res.render('index.hbs', viewModel);
-                });
+                res.render('index.hbs', viewModel);
             });
         };
 
@@ -131,7 +118,7 @@ var server = function() {
                 };
             };
 
-            dataRoot = options.root || '/teams';
+            teams.setRoot(__dirname + (options.root || '/teams'));
             httpServer = new AppServer(app, options);
 
             async.parallel([
