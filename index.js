@@ -14,6 +14,39 @@ var server = function() {
     var clientBuilder;
     var httpServer;
 
+    var displayForm = function(req, res) {
+        console.log('in');
+
+        var url = {
+            team: req.params.team,
+            form: req.params.form,
+            ticketId: req.params.ticketId
+        };
+
+        var render = function(card) {
+            teams.getTemplateForUrl(url, function(err, viewModel) {
+                if(err) {
+                    res.end('Form or Team not found');
+                    return;
+                }
+
+                res.render('index.hbs', viewModel);
+            });
+        };
+
+        if(url.ticketId) {
+            var client = clientBuilder();
+            var boardId = 91399429;
+
+            client.getCard(boardId, url.ticketId, function(err, card) {
+                render(card);
+            });
+        }
+        else {
+            render();
+        }
+    };
+
     app.set('view engine', 'html');
     app.engine('html', hbs.__express);
 
@@ -72,39 +105,11 @@ var server = function() {
         });
     });
 
-    var displayForm = function(req, res) {
-        var url = {
-            team: req.params.team,
-            form: req.params.form,
-            ticketId: req.params.ticketId
-        };
-
-        var render = function(card) {
-            teams.getTemplateForUrl(url, function(err, viewModel) {
-                if(err) {
-                    res.end('Form or Team not found');
-                    return;
-                }
-
-                res.render('index.hbs', viewModel);
-            });
-        };
-
-        if(url.ticketId) {
-            var client = clientBuilder();
-            var boardId = 91399429;
-
-            client.getCard(boardId, url.ticketId, function(err, card) {
-                render(card);
-            });
-        }
-        else {
-            render();
-        }
-    };
-
     app.get('/:team/:form/:ticketId', displayForm);
-    app.get('/:team/:form', displayForm);
+    app.get('/:team/:form', function(req, res) {
+        console.log(req.path);
+        displayForm(req, res);
+    });
 
     return {
         start: function(options, callback) {
