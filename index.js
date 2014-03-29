@@ -53,10 +53,16 @@ var server = function() {
     app.use("/static", express.static(__dirname + '/static'));
 
     app.post('/:team/:form/create', function(req, res) {
-        var boardMetaData = teams.get();
+        var url = {
+            team: req.params.team,
+            form: req.params.form,
+            ticketId: req.params.ticketId
+        };
+
+        var boardMetaData = teams.getBoardDataForTeam(url.team);
 
         leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
-            client.addCard(boardMetaData.board.boardId, 0, 0, {}, function() {
+            client.addCard(boardMetaData.id, 0, 0, {}, function() {
                 res.end('Hello');
             });
         });
@@ -131,9 +137,10 @@ var server = function() {
                 components.registerDir(__dirname + '/views/partials'),
                 setUpLeanKitClientBuilder.bind(undefined, credentialsPath),
                 httpServer.start,
-                teams.loadFromDir.bind(undefined, __dirname + '/teams')
+                teams.loadFromDir
             ],
             function(err, results) {
+                console.log(err);
                 (callback || function() {})(err, results[2]);
             });
         },

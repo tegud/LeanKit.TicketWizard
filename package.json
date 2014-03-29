@@ -29,6 +29,7 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "test": "grunt test"
   }
 }
