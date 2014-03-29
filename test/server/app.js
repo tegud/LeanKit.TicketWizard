@@ -1,15 +1,24 @@
+var expect = require('expect.js');
 var request = require('supertest');
 var proxyquire = require('proxyquire').noCallThru();
+
+var actualBoardId;
+
 var app = proxyquire('../../index', {
-    'leankit-client': {
-        newClient: function() {
-            return {
+    './lib/LeanKit/ClientBuilder': {
+        buildFromPath: function(path, callback) {
+            callback(null, {
                 getCard: function(board, ticket, callback) {
                     callback(null, {
                         Title: 'Test Item'
                     });
+                },
+                addCard: function(boardId, insertIntoLaneId, position, card, callback) {
+                    actualBoardId = boardId;
+
+                    callback(null, card);
                 }
-            };
+            });
         }
     }
 });
@@ -19,12 +28,14 @@ describe('TicketWizard', function () {
     var theApp;
 
     beforeEach(function(done) {
+        actualBoardId = null;
+
         theApp = new app();
         theApp.start({
             root: '/test/server/data'
         }, function(err, httpServer) {
             server = httpServer;
-            done();
+            done(err);
         });
     });
 
@@ -41,12 +52,13 @@ describe('TicketWizard', function () {
             .end(done);
     });
 
-    it.skip('loads populated ticket entry form for specified team and form with ticket information', function(done) {
+    it('creates a new ticket on the board for the specified team', function(done) {
         request(server)
-            .get('/Team/Standard/12345')
-            .expect(200)
-            .expect('Content-Type', /html/)
-            .expect(/Test Item/)
-            .end(done);
+            .post('/Team/Standard/create', { })
+            .end(function() {
+                expect(actualBoardId).to.eql(1234);
+                done();
+            });
     });
 });
+ 

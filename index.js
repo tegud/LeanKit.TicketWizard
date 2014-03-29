@@ -13,10 +13,9 @@ var server = function() {
     var app = express();
     var clientBuilder;
     var httpServer;
+    var credentialsPath = __dirname + '/credentials.json';
 
     var displayForm = function(req, res) {
-        console.log('in');
-
         var url = {
             team: req.params.team,
             form: req.params.form,
@@ -54,8 +53,15 @@ var server = function() {
     app.use("/static", express.static(__dirname + '/static'));
 
     app.post('/:team/:form/create', function(req, res) {
-        var client = clientBuilder();
-        var boardId = 91399429;
+        var boardMetaData = teams.get();
+
+        leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
+            client.addCard(boardMetaData.board.boardId, 0, 0, {}, function() {
+                res.end('Hello');
+            });
+        });
+
+        /*var boardId = 91399429;
         var insertIntoLaneId = 91557453;
         var cardTypeId = 91551782;
 
@@ -80,10 +86,10 @@ var server = function() {
                 AssignedUserIds: []
             };
 
-            client.addCard(boardId, insertIntoLaneId, 0, testCard, function(err, newCard) { 
+            client.addCard(boardId, insertIntoLaneId, 0, testCard, function(err, newCard) {
                 res.end(err);
             });
-        });
+        });*/
     });
 
     app.post('/:team/:form/update/:id', function(req, res) {
@@ -106,10 +112,7 @@ var server = function() {
     });
 
     app.get('/:team/:form/:ticketId', displayForm);
-    app.get('/:team/:form', function(req, res) {
-        console.log(req.path);
-        displayForm(req, res);
-    });
+    app.get('/:team/:form', displayForm);
 
     return {
         start: function(options, callback) {
@@ -126,7 +129,7 @@ var server = function() {
 
             async.parallel([
                 components.registerDir(__dirname + '/views/partials'),
-                setUpLeanKitClientBuilder.bind(undefined, __dirname + '/credentials.json'),
+                setUpLeanKitClientBuilder.bind(undefined, credentialsPath),
                 httpServer.start,
                 teams.loadFromDir.bind(undefined, __dirname + '/teams')
             ],
