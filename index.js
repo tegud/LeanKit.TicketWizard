@@ -62,7 +62,7 @@ var server = function() {
         var boardMetaData = teams.getBoardDataForTeam(url.team);
 
         leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
-            client.addCard(boardMetaData.id, 0, 0, {}, function() {
+            client.addCard(boardMetaData.id, boardMetaData.defaultLaneId, 0, {}, function() {
                 res.end('Hello');
             });
         });
@@ -140,7 +140,6 @@ var server = function() {
                 teams.loadFromDir
             ],
             function(err, results) {
-                console.log(err);
                 (callback || function() {})(err, results[2]);
             });
         },

@@ -3,6 +3,7 @@ var request = require('supertest');
 var proxyquire = require('proxyquire').noCallThru();
 
 var actualBoardId;
+var actualLaneId;
 
 var app = proxyquire('../../index', {
     './lib/LeanKit/ClientBuilder': {
@@ -15,6 +16,7 @@ var app = proxyquire('../../index', {
                 },
                 addCard: function(boardId, insertIntoLaneId, position, card, callback) {
                     actualBoardId = boardId;
+                    actualLaneId = insertIntoLaneId;
 
                     callback(null, card);
                 }
@@ -57,6 +59,15 @@ describe('TicketWizard', function () {
             .post('/Team/Standard/create', { })
             .end(function() {
                 expect(actualBoardId).to.eql(1234);
+                done();
+            });
+    });
+
+    it('creates a new ticket in to the default lane for the specified team', function(done) {
+        request(server)
+            .post('/Team/Standard/create', { })
+            .end(function() {
+                expect(actualLaneId).to.eql(5678);
                 done();
             });
     });
