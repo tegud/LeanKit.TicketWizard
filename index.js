@@ -60,9 +60,12 @@ var server = function() {
         };
 
         var boardMetaData = teams.getBoardDataForTeam(url.team);
+        var ticket = req.body;
 
         leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
-            client.addCard(boardMetaData.id, boardMetaData.defaultLaneId, 0, {}, function() {
+            client.addCard(boardMetaData.id, ticket.laneId || boardMetaData.defaultLaneId, 0, {
+                TypeID: boardMetaData.defaultCardTypeId
+            }, function() {
                 res.end('Hello');
             });
         });

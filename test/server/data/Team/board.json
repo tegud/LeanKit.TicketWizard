@@ -1,4 +1,5 @@
 {
     "id": 1234,
-    "defaultLaneId": 5678
+    "defaultLaneId": 5678,
+    "defaultCardTypeId": 121314
 }
