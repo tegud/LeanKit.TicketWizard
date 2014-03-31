@@ -64,7 +64,7 @@ var server = function() {
 
         leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
             client.addCard(boardMetaData.id, ticket.laneId || boardMetaData.defaultLaneId, 0, {
-                TypeID: boardMetaData.defaultCardTypeId
+                TypeID: ticket.typeId || boardMetaData.defaultCardTypeId
             }, function() {
                 res.end('Hello');
             });

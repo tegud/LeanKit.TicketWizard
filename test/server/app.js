@@ -97,5 +97,17 @@ describe('TicketWizard', function () {
             });
     });
 
+    it('creates a new ticket with the specified typeId', function(done) {
+        request(server)
+            .post('/Team/Standard/create')
+            .send({
+                typeId: 15161718
+            })
+            .end(function() {
+                expect(actualNewCard.TypeID).to.eql(15161718);
+                done();
+            });
+    });
+
 });
  
