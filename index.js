@@ -65,7 +65,10 @@ var server = function() {
             'typeId',
             'title',
             'size',
-            { in: 'tags', mapping: function(value) { return value.join(','); } }
+            {
+                in: 'tags',
+                mapping: function(value) { return value.join(','); }
+            }
         ];
 
         function lowerCaseFirstChar(value) {
@@ -77,7 +80,11 @@ var server = function() {
             var mapTo = propertyMapping.out || lowerCaseFirstChar(mapFrom);
             var value = req.body[mapFrom] || boardMetaData[mapFrom];
 
-            if(value && typeof propertyMapping.mapping === 'function') {
+            if(!value) {
+                return memo;
+            }
+
+            if(typeof propertyMapping.mapping === 'function') {
                 value = propertyMapping.mapping(value);
             }
 
@@ -85,6 +92,7 @@ var server = function() {
 
             return memo;
         }, {
+            Size: 0,
             Priority: 1,
             IsBlocked: false,
             BlockReason: '',
@@ -95,6 +103,8 @@ var server = function() {
             ExternalCardId: '',
             AssignedUserIds: []
         });
+
+
 
         leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
             client.addCard(boardMetaData.id, req.body.laneId || boardMetaData.laneId, 0, ticket, function() {

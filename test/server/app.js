@@ -62,7 +62,7 @@ describe('TicketWizard', function () {
         request(server)
             .post('/Team/Standard/create')
             .end(function() {
-                expect(actualBoardId).to.eql(1234);
+                expect(actualBoardId).to.be(1234);
                 done();
             });
     });
@@ -71,7 +71,7 @@ describe('TicketWizard', function () {
         request(server)
             .post('/Team/Standard/create')
             .end(function() {
-                expect(actualLaneId).to.eql(5678);
+                expect(actualLaneId).to.be(5678);
                 done();
             });
     });
@@ -83,7 +83,7 @@ describe('TicketWizard', function () {
                 laneId: 91011
             })
             .end(function() {
-                expect(actualLaneId).to.eql(91011);
+                expect(actualLaneId).to.be(91011);
                 done();
             });
     });
@@ -92,7 +92,16 @@ describe('TicketWizard', function () {
         request(server)
             .post('/Team/Standard/create')
             .end(function() {
-                expect(actualNewCard.TypeId).to.eql(121314);
+                expect(actualNewCard.TypeId).to.be(121314);
+                done();
+            });
+    });
+
+    it('creates a new ticket with a default card size of 0', function(done) {
+        request(server)
+            .post('/Team/Standard/create')
+            .end(function() {
+                expect(actualNewCard.Size).to.be(0);
                 done();
             });
     });
@@ -104,7 +113,10 @@ describe('TicketWizard', function () {
                 typeId: 15161718,
                 title: 'Card Title',
                 size: 3,
-                tags: ['One', 'Two']
+                tags: ['One', 'Two'],
+                Description: {
+                    test: '<div>Something = Something Else</div>'
+                }
             })
             .end(function() {
                 expect(actualNewCard).to.eql({
