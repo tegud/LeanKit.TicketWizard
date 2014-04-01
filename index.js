@@ -60,12 +60,44 @@ var server = function() {
         };
 
         var boardMetaData = teams.getBoardDataForTeam(url.team);
-        var ticket = req.body;
+
+        var ticketMapper = [
+            'typeId',
+            'title',
+            'size',
+            { in: 'tags', mapping: function(value) { return value.join(','); } }
+        ];
+
+        function lowerCaseFirstChar(value) {
+            return value[0].toUpperCase() + value.substring(1);
+        }
+
+        var ticket = _.reduce(ticketMapper, function(memo, propertyMapping) {
+            var mapFrom = propertyMapping.in || propertyMapping;
+            var mapTo = propertyMapping.out || lowerCaseFirstChar(mapFrom);
+            var value = req.body[mapFrom] || boardMetaData[mapFrom];
+
+            if(value && typeof propertyMapping.mapping === 'function') {
+                value = propertyMapping.mapping(value);
+            }
+
+            memo[mapTo] = value;
+
+            return memo;
+        }, {
+            Priority: 1,
+            IsBlocked: false,
+            BlockReason: '',
+            DueDate: '',
+            ExternalSystemName: '',
+            ExternalSystemUrl: '',
+            ClassOfServiceId: null,
+            ExternalCardId: '',
+            AssignedUserIds: []
+        });
 
         leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
-            client.addCard(boardMetaData.id, ticket.laneId || boardMetaData.defaultLaneId, 0, {
-                TypeID: ticket.typeId || boardMetaData.defaultCardTypeId
-            }, function() {
+            client.addCard(boardMetaData.id, req.body.laneId || boardMetaData.laneId, 0, ticket, function() {
                 res.end('Hello');
             });
         });

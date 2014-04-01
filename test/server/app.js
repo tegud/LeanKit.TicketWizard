@@ -92,22 +92,38 @@ describe('TicketWizard', function () {
         request(server)
             .post('/Team/Standard/create')
             .end(function() {
-                expect(actualNewCard.TypeID).to.eql(121314);
+                expect(actualNewCard.TypeId).to.eql(121314);
                 done();
             });
     });
 
-    it('creates a new ticket with the specified typeId', function(done) {
+    it('creates a new ticket with the specified details', function(done) {
         request(server)
             .post('/Team/Standard/create')
             .send({
-                typeId: 15161718
+                typeId: 15161718,
+                title: 'Card Title',
+                size: 3,
+                tags: ['One', 'Two']
             })
             .end(function() {
-                expect(actualNewCard.TypeID).to.eql(15161718);
+                expect(actualNewCard).to.eql({
+                    TypeId: 15161718,
+                    Title: 'Card Title',
+                    Size: 3,
+                    Tags: 'One,Two',
+                    Priority: 1,
+                    IsBlocked: false,
+                    BlockReason: '',
+                    DueDate: '',
+                    ExternalSystemName: '',
+                    ExternalSystemUrl: '',
+                    ClassOfServiceId: null,
+                    ExternalCardId: '',
+                    AssignedUserIds: []
+                });
                 done();
             });
     });
-
 });
  
