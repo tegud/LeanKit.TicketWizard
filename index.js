@@ -66,8 +66,16 @@ var server = function() {
             'title',
             'size',
             {
+                in: 'description',
+                mapping: function(value, callback) {
+                    callback(null, value);
+                }
+            },
+            {
                 in: 'tags',
-                mapping: function(value) { return value.join(','); }
+                mapping: function(value, callback) {
+                    callback(null, value.join(','));
+                }
             }
         ];
 
@@ -75,13 +83,26 @@ var server = function() {
             return value[0].toUpperCase() + value.substring(1);
         }
 
-        var ticket = _.reduce(ticketMapper, function(memo, propertyMapping) {
+        async.reduce(ticketMapper, {
+                Size: 0,
+                Priority: 1,
+                IsBlocked: false,
+                BlockReason: '',
+                DueDate: '',
+                ExternalSystemName: '',
+                ExternalSystemUrl: '',
+                ClassOfServiceId: null,
+                ExternalCardId: '',
+                AssignedUserIds: []
+            },
+            function(memo, propertyMapping, callback) {
             var mapFrom = propertyMapping.in || propertyMapping;
             var mapTo = propertyMapping.out || lowerCaseFirstChar(mapFrom);
             var value = req.body[mapFrom] || boardMetaData[mapFrom];
 
             if(!value) {
-                return memo;
+                callback(null, memo);
+                return;
             }
 
             if(typeof propertyMapping.mapping === 'function') {
@@ -90,27 +111,15 @@ var server = function() {
 
             memo[mapTo] = value;
 
-            return memo;
-        }, {
-            Size: 0,
-            Priority: 1,
-            IsBlocked: false,
-            BlockReason: '',
-            DueDate: '',
-            ExternalSystemName: '',
-            ExternalSystemUrl: '',
-            ClassOfServiceId: null,
-            ExternalCardId: '',
-            AssignedUserIds: []
-        });
-
-
-
-        leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
-            client.addCard(boardMetaData.id, req.body.laneId || boardMetaData.laneId, 0, ticket, function() {
-                res.end('Hello');
+            callback(null, memo);
+        }, function(err, ticket) {
+            leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
+                client.addCard(boardMetaData.id, req.body.laneId || boardMetaData.laneId, 0, ticket, function() {
+                    res.end('Hello');
+                });
             });
         });
+
 
         /*var boardId = 91399429;
         var insertIntoLaneId = 91557453;

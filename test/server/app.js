@@ -114,14 +114,15 @@ describe('TicketWizard', function () {
                 title: 'Card Title',
                 size: 3,
                 tags: ['One', 'Two'],
-                Description: {
-                    test: '<div>Something = Something Else</div>'
+                description: {
+                    test: 'Something Else'
                 }
             })
             .end(function() {
                 expect(actualNewCard).to.eql({
                     TypeId: 15161718,
                     Title: 'Card Title',
+                    Description: '<div>Something = Something Else</div>',
                     Size: 3,
                     Tags: 'One,Two',
                     Priority: 1,
