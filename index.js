@@ -6,6 +6,7 @@ var async = require('async');
 var Components = require('./lib/Components');
 var AppServer = require('./lib/AppServer');
 var leanKitClientBuilder = require('./lib/LeanKit/ClientBuilder');
+var TicketBuilder = require('./lib/LeanKit/TicketBuilder');
 var fsUtil = require('./lib/fsUtils');
 var teams = require('./lib/Teams');
 
@@ -58,80 +59,11 @@ var server = function() {
             form: req.params.form,
             ticketId: req.params.ticketId
         };
-
         var boardMetaData = teams.getBoardDataForTeam(url.team);
-
-        var defaultMapper = function (value, callback) { callback(null, value); };
-
-        var ticketMapper = [
-            'typeId',
-            'title',
-            'size',
-            {
-                in: 'description',
-                mapping: function(value, callback) {
-                    async.waterfall(
-                        [
-                            teams.getTicketTemplateForUrl.bind(undefined, url),
-                            function(template, callback) {
-                                var description = template(value);
-
-                                callback(null, description);
-                            }
-                        ],
-                        callback
-                    );
-                }
-            },
-            {
-                in: 'tags',
-                mapping: function(value, callback) {
-                    callback(null, value.join(','));
-                }
-            }
-        ];
-
-        function lowerCaseFirstChar(value) {
-            return value[0].toUpperCase() + value.substring(1);
-        }
-
-        var baseTicket = {
-            Size: 0,
-            Priority: 1,
-            IsBlocked: false,
-            BlockReason: '',
-            DueDate: '',
-            ExternalSystemName: '',
-            ExternalSystemUrl: '',
-            ClassOfServiceId: null,
-            ExternalCardId: '',
-            AssignedUserIds: []
-        };
-
-        function buildTicket(callback) {
-            async.reduce(ticketMapper, _.clone(baseTicket),
-                function(memo, propertyMapping, callback) {
-                    var mapFrom = propertyMapping.in || propertyMapping;
-                    var mapTo = propertyMapping.out || lowerCaseFirstChar(mapFrom);
-                    var value = req.body[mapFrom] || boardMetaData[mapFrom];
-                    var mappingFunction = propertyMapping.mapping;
-
-                    if(!value) {
-                        callback(null, memo);
-                        return;
-                    }
-
-                    if(!mappingFunction) {
-                        mappingFunction = defaultMapper;
-                    }
-
-                    mappingFunction(value, function(err, value) {
-                        memo[mapTo] = value;
-                        callback(err, memo);
-                    });
-                },
-                callback);
-        }
+        var ticketBuilder = new TicketBuilder({
+            url: url,
+            boardMetaData: boardMetaData
+        });
 
         function setUpClient(ticket, callback) {
             leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
@@ -144,7 +76,7 @@ var server = function() {
         }
 
         async.waterfall([
-            buildTicket,
+            ticketBuilder.create.bind(undefined, req.body),
             setUpClient,
             createTicketInLeanKit
         ],
