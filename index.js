@@ -95,49 +95,58 @@ var server = function() {
             return value[0].toUpperCase() + value.substring(1);
         }
 
+        var baseTicket = {
+            Size: 0,
+            Priority: 1,
+            IsBlocked: false,
+            BlockReason: '',
+            DueDate: '',
+            ExternalSystemName: '',
+            ExternalSystemUrl: '',
+            ClassOfServiceId: null,
+            ExternalCardId: '',
+            AssignedUserIds: []
+        };
+
+        function buildTicket(callback) {
+            async.reduce(ticketMapper, _.clone(baseTicket),
+                function(memo, propertyMapping, callback) {
+                    var mapFrom = propertyMapping.in || propertyMapping;
+                    var mapTo = propertyMapping.out || lowerCaseFirstChar(mapFrom);
+                    var value = req.body[mapFrom] || boardMetaData[mapFrom];
+                    var mappingFunction = propertyMapping.mapping;
+
+                    if(!value) {
+                        callback(null, memo);
+                        return;
+                    }
+
+                    if(!mappingFunction) {
+                        mappingFunction = defaultMapper;
+                    }
+
+                    mappingFunction(value, function(err, value) {
+                        memo[mapTo] = value;
+                        callback(err, memo);
+                    });
+                },
+                callback);
+        }
+
+        function setUpClient(ticket, callback) {
+            leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
+                callback(err, client, ticket);
+            });
+        }
+
+        function createTicketInLeanKit(client, ticket, callback) {
+            client.addCard(boardMetaData.id, req.body.laneId || boardMetaData.laneId, 0, ticket, callback);
+        }
+
         async.waterfall([
-            function(callback) {
-                async.reduce(ticketMapper, {
-                        Size: 0,
-                        Priority: 1,
-                        IsBlocked: false,
-                        BlockReason: '',
-                        DueDate: '',
-                        ExternalSystemName: '',
-                        ExternalSystemUrl: '',
-                        ClassOfServiceId: null,
-                        ExternalCardId: '',
-                        AssignedUserIds: []
-                    },
-                    function(memo, propertyMapping, callback) {
-                        var mapFrom = propertyMapping.in || propertyMapping;
-                        var mapTo = propertyMapping.out || lowerCaseFirstChar(mapFrom);
-                        var value = req.body[mapFrom] || boardMetaData[mapFrom];
-                        var mappingFunction = propertyMapping.mapping;
-
-                        if(!value) {
-                            callback(null, memo);
-                            return;
-                        }
-
-                        if(!mappingFunction) {
-                            mappingFunction = defaultMapper;
-                        }
-
-                        mappingFunction(value, function(err, value) {
-                            memo[mapTo] = value;
-                            callback(err, memo);
-                        });
-                    }, callback);
-            },
-            function(ticket, callback) {
-                leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
-                    callback(err, client, ticket);
-                });
-            },
-            function(client, ticket, callback) {
-                client.addCard(boardMetaData.id, req.body.laneId || boardMetaData.laneId, 0, ticket, callback);
-            }
+            buildTicket,
+            setUpClient,
+            createTicketInLeanKit
         ],
         function() {
             res.end('Hello');
