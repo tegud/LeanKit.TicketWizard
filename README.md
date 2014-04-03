@@ -1,5 +1,5 @@
 LeanKit.TicketWizard
 ====================
-[![Build Status](https://travis-ci.org/tegud/grunt-juve.png?branch=master)](https://travis-ci.org/tegud/grunt-juve)
+[![Build Status](https://travis-ci.org/tegud/LeanKit.TicketWizard.png?branch=V1)](https://travis-ci.org/tegud/LeanKit.TicketWizard)
 
 Interface for creating tickets/requests.
