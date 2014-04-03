@@ -72,7 +72,6 @@ var server = function() {
         }
 
         function createTicketInLeanKit(client, ticket, callback) {
-            console.log(ticket);
             client.addCard(boardMetaData.boardId, req.body.laneId || boardMetaData.laneId, 0, ticket, callback);
         }
 
@@ -82,7 +81,6 @@ var server = function() {
             createTicketInLeanKit
         ],
         function(err, resp) {
-            console.log(err, resp);
             res.end('Hello');
         });
     });
