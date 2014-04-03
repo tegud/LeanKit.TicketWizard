@@ -61,6 +61,8 @@ var server = function() {
 
         var boardMetaData = teams.getBoardDataForTeam(url.team);
 
+        var defaultMapper = function (value, callback) { callback(null, value); };
+
         var ticketMapper = [
             'typeId',
             'title',
@@ -68,7 +70,17 @@ var server = function() {
             {
                 in: 'description',
                 mapping: function(value, callback) {
-                    callback(null, value);
+                    async.waterfall(
+                        [
+                            teams.getTicketTemplateForUrl.bind(undefined, url),
+                            function(template, callback) {
+                                var description = template(value);
+
+                                callback(null, description);
+                            }
+                        ],
+                        callback
+                    );
                 }
             },
             {
@@ -83,73 +95,53 @@ var server = function() {
             return value[0].toUpperCase() + value.substring(1);
         }
 
-        async.reduce(ticketMapper, {
-                Size: 0,
-                Priority: 1,
-                IsBlocked: false,
-                BlockReason: '',
-                DueDate: '',
-                ExternalSystemName: '',
-                ExternalSystemUrl: '',
-                ClassOfServiceId: null,
-                ExternalCardId: '',
-                AssignedUserIds: []
+        async.waterfall([
+            function(callback) {
+                async.reduce(ticketMapper, {
+                        Size: 0,
+                        Priority: 1,
+                        IsBlocked: false,
+                        BlockReason: '',
+                        DueDate: '',
+                        ExternalSystemName: '',
+                        ExternalSystemUrl: '',
+                        ClassOfServiceId: null,
+                        ExternalCardId: '',
+                        AssignedUserIds: []
+                    },
+                    function(memo, propertyMapping, callback) {
+                        var mapFrom = propertyMapping.in || propertyMapping;
+                        var mapTo = propertyMapping.out || lowerCaseFirstChar(mapFrom);
+                        var value = req.body[mapFrom] || boardMetaData[mapFrom];
+                        var mappingFunction = propertyMapping.mapping;
+
+                        if(!value) {
+                            callback(null, memo);
+                            return;
+                        }
+
+                        if(!mappingFunction) {
+                            mappingFunction = defaultMapper;
+                        }
+
+                        mappingFunction(value, function(err, value) {
+                            memo[mapTo] = value;
+                            callback(err, memo);
+                        });
+                    }, callback);
             },
-            function(memo, propertyMapping, callback) {
-            var mapFrom = propertyMapping.in || propertyMapping;
-            var mapTo = propertyMapping.out || lowerCaseFirstChar(mapFrom);
-            var value = req.body[mapFrom] || boardMetaData[mapFrom];
-
-            if(!value) {
-                callback(null, memo);
-                return;
-            }
-
-            if(typeof propertyMapping.mapping === 'function') {
-                value = propertyMapping.mapping(value);
-            }
-
-            memo[mapTo] = value;
-
-            callback(null, memo);
-        }, function(err, ticket) {
-            leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
-                client.addCard(boardMetaData.id, req.body.laneId || boardMetaData.laneId, 0, ticket, function() {
-                    res.end('Hello');
+            function(ticket, callback) {
+                leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
+                    callback(err, client, ticket);
                 });
-            });
+            },
+            function(client, ticket, callback) {
+                client.addCard(boardMetaData.id, req.body.laneId || boardMetaData.laneId, 0, ticket, callback);
+            }
+        ],
+        function() {
+            res.end('Hello');
         });
-
-
-        /*var boardId = 91399429;
-        var insertIntoLaneId = 91557453;
-        var cardTypeId = 91551782;
-
-        fsUtil.readFileAsUtf8(__dirname + '/teams/' + req.params.team + '/' + req.params.form + '.hbs', function(err, fileContents) {
-            var template = handlebars.compile(fileContents);
-            var description = template(req.body.description);
-
-            var testCard = {
-                Title: req.body.title,
-                Description: description,
-                TypeId: cardTypeId,
-                Priority: 1,
-                Size: req.body.size || 0,
-                IsBlocked: false,
-                BlockReason: '',
-                DueDate: '',
-                ExternalSystemName: '',
-                ExternalSystemUrl: '',
-                Tags: req.body.tags.join(','),
-                ClassOfServiceId: null,
-                ExternalCardId: '',
-                AssignedUserIds: []
-            };
-
-            client.addCard(boardId, insertIntoLaneId, 0, testCard, function(err, newCard) {
-                res.end(err);
-            });
-        });*/
     });
 
     app.post('/:team/:form/update/:id', function(req, res) {
