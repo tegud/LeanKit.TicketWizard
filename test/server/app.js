@@ -58,85 +58,91 @@ describe('TicketWizard', function () {
             .end(done);
     });
 
-    it('creates a new ticket on the board for the specified team', function(done) {
-        request(server)
-            .post('/Team/Standard/create')
-            .end(function() {
-                expect(actualBoardId).to.be(1234);
-                done();
-            });
+    it('loads ticket entry form populated with specified ticket title', function(done) {
+        done();
     });
 
-    it('creates a new ticket in to the default lane for the specified team', function(done) {
-        request(server)
-            .post('/Team/Standard/create')
-            .end(function() {
-                expect(actualLaneId).to.be(5678);
-                done();
-            });
-    });
-
-    it('creates a new ticket in the specified lane', function(done) {
-        request(server)
-            .post('/Team/Standard/create')
-            .send({
-                laneId: 91011
-            })
-            .end(function() {
-                expect(actualLaneId).to.be(91011);
-                done();
-            });
-    });
-
-    it('creates a new ticket with the specified team\'s default card type', function(done) {
-        request(server)
-            .post('/Team/Standard/create')
-            .end(function() {
-                expect(actualNewCard.TypeId).to.be(121314);
-                done();
-            });
-    });
-
-    it('creates a new ticket with a default card size of 0', function(done) {
-        request(server)
-            .post('/Team/Standard/create')
-            .end(function() {
-                expect(actualNewCard.Size).to.be(0);
-                done();
-            });
-    });
-
-    it('creates a new ticket with the specified details', function(done) {
-        request(server)
-            .post('/Team/Standard/create')
-            .send({
-                typeId: 15161718,
-                title: 'Card Title',
-                size: 3,
-                tags: ['One', 'Two'],
-                description: {
-                    test: 'Something Else'
-                }
-            })
-            .end(function() {
-                expect(actualNewCard).to.eql({
-                    TypeId: 15161718,
-                    Title: 'Card Title',
-                    Description: '<div>Something = Something Else</div>',
-                    Size: 3,
-                    Tags: 'One,Two',
-                    Priority: 1,
-                    IsBlocked: false,
-                    BlockReason: '',
-                    DueDate: '',
-                    ExternalSystemName: '',
-                    ExternalSystemUrl: '',
-                    ClassOfServiceId: null,
-                    ExternalCardId: '',
-                    AssignedUserIds: []
+    describe('creates new ticket', function() {
+        it('on the board for the specified team', function(done) {
+            request(server)
+                .post('/Team/Standard/create')
+                .end(function() {
+                    expect(actualBoardId).to.be(1234);
+                    done();
                 });
-                done();
-            });
+        });
+
+        it('in the default lane for the specified team', function(done) {
+            request(server)
+                .post('/Team/Standard/create')
+                .end(function() {
+                    expect(actualLaneId).to.be(5678);
+                    done();
+                });
+        });
+
+        it('in the specified lane', function(done) {
+            request(server)
+                .post('/Team/Standard/create')
+                .send({
+                    laneId: 91011
+                })
+                .end(function() {
+                    expect(actualLaneId).to.be(91011);
+                    done();
+                });
+        });
+
+        it('with the specified team\'s default card type', function(done) {
+            request(server)
+                .post('/Team/Standard/create')
+                .end(function() {
+                    expect(actualNewCard.TypeId).to.be(121314);
+                    done();
+                });
+        });
+
+        it('with a default card size of 0', function(done) {
+            request(server)
+                .post('/Team/Standard/create')
+                .end(function() {
+                    expect(actualNewCard.Size).to.be(0);
+                    done();
+                });
+        });
+
+        it('with the specified details', function(done) {
+            request(server)
+                .post('/Team/Standard/create')
+                .send({
+                    typeId: 15161718,
+                    title: 'Card Title',
+                    size: 3,
+                    tags: ['One', 'Two'],
+                    description: {
+                        test: 'Something Else'
+                    }
+                })
+                .end(function() {
+                    expect(actualNewCard).to.eql({
+                        TypeId: 15161718,
+                        Title: 'Card Title',
+                        Description: '<div>Something = Something Else</div>',
+                        Size: 3,
+                        Tags: 'One,Two',
+                        Priority: 1,
+                        IsBlocked: false,
+                        BlockReason: '',
+                        DueDate: '',
+                        ExternalSystemName: '',
+                        ExternalSystemUrl: '',
+                        ClassOfServiceId: null,
+                        ExternalCardId: '',
+                        AssignedUserIds: []
+                    });
+                    done();
+                });
+        });
     });
 });
  

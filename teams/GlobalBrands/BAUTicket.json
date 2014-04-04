@@ -48,15 +48,18 @@
                     "rows": [
                         {
                             "label": "Given",
-                            "type": "text"
+                            "type": "text",
+                            "size": "multi-line"
                         },
                         {
                             "label": "When",
-                            "type": "text"
+                            "type": "text",
+                            "size": "multi-line"
                         },
                         {
                             "label": "Then",
-                            "type": "text"
+                            "type": "text",
+                            "size": "multi-line"
                         }
                     ]
                 }
