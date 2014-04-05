@@ -9,6 +9,15 @@
                     "appendTo": "Title"
                 }
             ]
+        },
+        {
+            "fields": [
+                {
+                    "type": "text",
+                    "label": "Description of Ticket",
+                    "appendTo": "Description"
+                }
+            ]
         }
     ]
 }

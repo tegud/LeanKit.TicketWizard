@@ -24,10 +24,24 @@ var server = function() {
         };
 
         var render = function(card) {
-            teams.getTemplateForUrl(url, function(err, viewModel) {
+            teams.getViewModelForUrl(url, function(err, viewModel) {
                 if(err) {
                     res.end('Form or Team not found');
                     return;
+                }
+
+
+                if(card) {
+                    _.each(viewModel.sections, function(section) {
+                        _.each(section.fields, function(field) {
+                            var appendTo = field.appendTo;
+                            var cardValue = card[appendTo];
+
+                            if(cardValue) {
+                                field.setValue(cardValue);
+                            }
+                        });
+                    });
                 }
 
                 res.render('index.hbs', viewModel);
@@ -35,11 +49,12 @@ var server = function() {
         };
 
         if(url.ticketId) {
-            var client = clientBuilder();
-            var boardId = 91399429;
+            leanKitClientBuilder.buildFromPath(credentialsPath, function(err, client) {
+                var boardId = 91399429;
 
-            client.getCard(boardId, url.ticketId, function(err, card) {
-                render(card);
+                client.getCard(boardId, url.ticketId, function(err, card) {
+                    render(card);
+                });
             });
         }
         else {

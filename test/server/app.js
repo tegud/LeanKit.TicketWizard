@@ -60,7 +60,7 @@ describe('TicketWizard', function () {
             .end(done);
     });
 
-    it.skip('loads ticket entry form populated with specified ticket title', function(done) {
+    it('loads ticket entry form populated with specified ticket title', function(done) {
         knownTickets[12345] = {
             Title: 'Test Item'
         };
