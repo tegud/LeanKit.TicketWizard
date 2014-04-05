@@ -2,6 +2,8 @@ var expect = require('expect.js');
 var request = require('supertest');
 var proxyquire = require('proxyquire').noCallThru();
 
+var knownTickets;
+
 var actualBoardId;
 var actualLaneId;
 var actualNewCard;
@@ -11,9 +13,7 @@ var app = proxyquire('../../index', {
         buildFromPath: function(path, callback) {
             callback(null, {
                 getCard: function(board, ticket, callback) {
-                    callback(null, {
-                        Title: 'Test Item'
-                    });
+                    callback(null, knownTickets[ticket]);
                 },
                 addCard: function(boardId, insertIntoLaneId, position, card, callback) {
                     actualBoardId = boardId;
@@ -35,6 +35,8 @@ describe('TicketWizard', function () {
         actualBoardId = null;
         actualLaneId = null;
         actualNewCard = null;
+
+        knownTickets = {};
 
         theApp = new app();
         theApp.start({
@@ -58,8 +60,17 @@ describe('TicketWizard', function () {
             .end(done);
     });
 
-    it('loads ticket entry form populated with specified ticket title', function(done) {
-        done();
+    it.skip('loads ticket entry form populated with specified ticket title', function(done) {
+        knownTickets[12345] = {
+            Title: 'Test Item'
+        };
+
+        request(server)
+            .get('/Team/Standard/12345')
+            .expect(200)
+            .expect('Content-Type', /html/)
+            .expect(/value="Test Item"/)
+            .end(done);
     });
 
     describe('creates new ticket', function() {
