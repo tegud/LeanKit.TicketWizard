@@ -81,7 +81,7 @@ describe('TicketWizard', function () {
                 });
         });
 
-        it.only('description field', function(done) {
+        it('description field', function(done) {
             knownTickets[12345] = {
                 Title: 'Test Item',
                 Description: '<span class="dv" data-dv="Description of Ticket">Description of ticket</span>'
