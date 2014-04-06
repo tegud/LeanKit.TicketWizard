@@ -23,7 +23,8 @@
     "jshint-stylish": "~0.1.5",
     "expect.js": "~0.3.1",
     "express": "~3.5.0",
-    "proxyquire": "~0.5.3"
+    "proxyquire": "~0.5.3",
+    "cheerio": "~0.13.1"
   },
   "engines": {
     "node": ">=0.8.0"

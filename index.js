@@ -9,6 +9,8 @@ var leanKitClientBuilder = require('./lib/LeanKit/ClientBuilder');
 var TicketBuilder = require('./lib/LeanKit/TicketBuilder');
 var fsUtil = require('./lib/fsUtils');
 var teams = require('./lib/Teams');
+var cheerio = require('cheerio');
+var toCamelCase = require('./lib/stringUtils').toCamelCase;
 
 var server = function() {
     var app = express();
@@ -23,6 +25,11 @@ var server = function() {
             ticketId: req.params.ticketId
         };
 
+        var cardPropertyMappings = {
+            'title': 'Title',
+            'description': 'Description'
+        };
+
         var render = function(card) {
             teams.getViewModelForUrl(url, function(err, viewModel) {
                 if(err) {
@@ -30,12 +37,26 @@ var server = function() {
                     return;
                 }
 
-
                 if(card) {
+                    var $ = cheerio.load(card.Description);
+                    var descriptionFieldValues = {};
+
+                    $('.dv').each(function() {
+                        var fieldValueElement = this;
+                        var fieldValueName = toCamelCase(fieldValueElement.data('dv'));
+
+                        descriptionFieldValues[fieldValueName] = this.html();
+                    });
+
                     _.each(viewModel.sections, function(section) {
                         _.each(section.fields, function(field) {
-                            var appendTo = field.appendTo;
-                            var cardValue = card[appendTo];
+                            var appendTo = field.appendTo || 'description';
+                            var fillpoint = field.fillpoint;
+                            var cardValue = card[cardPropertyMappings[appendTo]];
+
+                            if(cardValue && appendTo === 'description') {
+                                cardValue = descriptionFieldValues[fillpoint];
+                            }
 
                             if(cardValue) {
                                 field.setValue(cardValue);

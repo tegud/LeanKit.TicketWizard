@@ -1,6 +1,7 @@
 var expect = require('expect.js');
 var request = require('supertest');
 var proxyquire = require('proxyquire').noCallThru();
+var cheerio = require('cheerio');
 
 var knownTickets;
 
@@ -60,17 +61,45 @@ describe('TicketWizard', function () {
             .end(done);
     });
 
-    it('loads ticket entry form populated with specified ticket title', function(done) {
-        knownTickets[12345] = {
-            Title: 'Test Item'
-        };
+    describe('loads ticket entry form for specified ticket', function() {
+        it('title', function(done) {
+            knownTickets[12345] = {
+                Title: 'Test Item'
+            };
 
-        request(server)
-            .get('/Team/Standard/12345')
-            .expect(200)
-            .expect('Content-Type', /html/)
-            .expect(/value="Test Item"/)
-            .end(done);
+            request(server)
+                .get('/Team/Standard/12345')
+                .expect(200)
+                .expect('Content-Type', /html/)
+                .end(function(err, res) {
+                    var $ = cheerio.load(res.text);
+                    var titleFieldValue = $('input[data-append-to="title"]').val();
+
+                    expect(titleFieldValue).to.be('Test Item');
+
+                    done(err);
+                });
+        });
+
+        it.only('description field', function(done) {
+            knownTickets[12345] = {
+                Title: 'Test Item',
+                Description: '<span class="dv" data-dv="Description of Ticket">Description of ticket</span>'
+            };
+
+            request(server)
+                .get('/Team/Standard/12345')
+                .expect(200)
+                .expect('Content-Type', /html/)
+                .end(function(err, res) {
+                    var $ = cheerio.load(res.text);
+                    var descriptionFieldValue = $('input[data-fillpoint="descriptionOfTicket"]').val();
+
+                    expect(descriptionFieldValue).to.be('Description of ticket');
+
+                    done(err);
+                });
+        });
     });
 
     describe('creates new ticket', function() {
