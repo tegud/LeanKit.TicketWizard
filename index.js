@@ -30,6 +30,20 @@ var server = function() {
             'description': 'Description'
         };
 
+        var parseDescription = function(description) {
+            var $ = cheerio.load(description);
+            var descriptionFieldValues = {};
+
+            $('.dv').each(function() {
+                var fieldValueElement = this;
+                var fieldValueName = toCamelCase(fieldValueElement.data('dv'));
+
+                descriptionFieldValues[fieldValueName] = this.html();
+            });
+
+            return descriptionFieldValues;
+        };
+
         var render = function(card) {
             teams.getViewModelForUrl(url, function(err, viewModel) {
                 if(err) {
@@ -38,15 +52,7 @@ var server = function() {
                 }
 
                 if(card) {
-                    var $ = cheerio.load(card.Description);
-                    var descriptionFieldValues = {};
-
-                    $('.dv').each(function() {
-                        var fieldValueElement = this;
-                        var fieldValueName = toCamelCase(fieldValueElement.data('dv'));
-
-                        descriptionFieldValues[fieldValueName] = this.html();
-                    });
+                    parseDescription(card.Description);
 
                     _.each(viewModel.sections, function(section) {
                         _.each(section.fields, function(field) {

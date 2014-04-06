@@ -88,4 +88,15 @@ describe('text', function () {
             done();
         });
     });
+
+    it('setValue sets the value', function(done) {
+        buildTitle({
+            label: 'One Two Three',
+            appendTo: 'description'
+        }, function(err, title) {
+            title.setValue('Expected Value');
+            expect(title.value).to.be('Expected Value');
+            done();
+        });
+    });
 });
