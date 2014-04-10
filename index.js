@@ -52,7 +52,7 @@ var server = function() {
                 }
 
                 if(card) {
-                    parseDescription(card.Description);
+                    var descriptionFieldValues = parseDescription(card.Description);
 
                     _.each(viewModel.sections, function(section) {
                         _.each(section.fields, function(field) {
